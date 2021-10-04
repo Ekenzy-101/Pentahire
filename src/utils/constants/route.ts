@@ -1,0 +1,17 @@
+export const TO_ACCOUNT_PAGE = "/account";
+export const TO_BECOME_HOST_PAGE = "/list-your-car";
+export const TO_DRIVERS_PAGE = "/drivers";
+export const TO_FORGOT_PASSWORD_PAGE = "/reset-password";
+export const TO_HOME_PAGE = "/";
+export const TO_LOGIN_PAGE = "/login";
+export const TO_MESSAGES_PAGE = "/messages";
+export const TO_PRIVACY_POLICY_PAGE = "/privacy-policy";
+export const TO_REGISTER_PAGE = "/register";
+export const TO_SETTINGS_PAGE = "/account/settings";
+export const TO_SUPPORT_PAGE = "/support";
+export const TO_TERMS_OF_SERVICE_PAGE = "/terms-of-service";
+export const TO_TRIPS_ACTIVITY_PAGE = "/trips/activity";
+export const TO_TRIPS_HISTORY_PAGE = "/trips/history";
+export const TO_TRIPS_BOOKING_PAGE = "/trips/booked";
+export const TO_UNVERIFED_EMAIL_PAGE = "/unverified-email";
+export const TO_VEHICLES_PAGE = "/vehicles";
