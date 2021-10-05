@@ -23,10 +23,6 @@ export async function registerUser(
   return data as { user: User };
 }
 
-export async function resetPassword(formData: {
-  password: string;
-  token: string;
-}) {
-  const { data } = await http.post("/auth/reset-password", formData);
-  return data;
+export function resetPassword(formData: { password: string; token: string }) {
+  return http.post("/auth/reset-password", formData);
 }

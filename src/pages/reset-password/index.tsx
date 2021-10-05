@@ -26,10 +26,11 @@ import {
   TO_LOGIN_PAGE,
   TO_REGISTER_PAGE,
 } from "src/utils/constants";
+import { Color } from "@material-ui/lab";
 
 const ForgotPasswordPage = () => {
   const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState<"error" | "success">("error");
+  const [severity, setSeverity] = useState<Color>("error");
 
   const { isLoading, mutateAsync } = useMutation(
     sendForgotPasswordNotification
@@ -52,7 +53,7 @@ const ForgotPasswordPage = () => {
     setSeverity("error");
   };
 
-  const onSubmit = async ({ email }: FormValues) => {
+  const onSendResetPasswordNotification = async ({ email }: FormValues) => {
     try {
       const {
         data: { message },
@@ -85,7 +86,7 @@ const ForgotPasswordPage = () => {
         <EnhancedPaper>
           <Header />
           <FormContainer>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSendResetPasswordNotification)}>
               <CustomAlert
                 message={message}
                 open={Boolean(message)}
