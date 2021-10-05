@@ -15,23 +15,25 @@ import {
   FormLegend,
   FormLink,
 } from "src/components/common/form";
+import LoadingPage from "src/components/common/LoadingPage";
 import EnhancedPaper from "src/components/common/Paper";
 import SEO from "src/components/common/SEO";
 import { registerUser, sendVerifyEmailNotification } from "src/services/api";
 import { isObject, userResolver } from "src/services/validations";
 import { COMPANY_NAME, TO_LOGIN_PAGE } from "src/utils/constants";
 import { FormValues } from "src/utils/types";
-import { useAuthUser } from "src/hooks";
+import { useAuthUser, useRedirectedRoute } from "src/hooks";
 
 const RegisterPage = () => {
   const [message, setMessage] = useState("");
   const recaptchaRef = useRef<HCaptcha>(null);
 
   const { user } = useAuthUser();
-  const client = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(sendVerifyEmailNotification);
   const { mutateAsync: mutateRegisterAsync, isLoading: isRegisteringUser } =
     useMutation(registerUser);
+  const client = useQueryClient();
+  const { loading } = useRedirectedRoute();
   const {
     formState: { errors },
     getValues,
@@ -114,95 +116,113 @@ const RegisterPage = () => {
   };
 
   return (
-    <EnhancedPaper>
+    <>
       <SEO title={`Register - ${COMPANY_NAME}`} />
-      <Header />
-      <FormContainer>
-        {user ? (
-          <Paper variant="elevation" style={{ padding: "1rem" }} elevation={2}>
-            <Form onSubmit={handleResendEmail}>
-              <CustomAlert
-                message={message}
-                open={Boolean(message)}
-                onClose={() => setMessage("")}
-                severity={"error"}
-              />
-              <FormLegend variant="h6">Verify your email address</FormLegend>
-              <FormLegend
-                style={{ margin: "0.3rem auto 2rem auto" }}
-                variant="body1"
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <EnhancedPaper>
+          <Header />
+          <FormContainer>
+            {user ? (
+              <Paper
+                variant="elevation"
+                style={{ padding: "1rem" }}
+                elevation={2}
               >
-                An email containing verification instructions was sent to
-                <strong> {watch("email")}.</strong> If you have not received a
-                mail check your spam settings or check the spelling of your
-                email address.
-              </FormLegend>
-              <FormButton disabled={isLoading}>
-                {isLoading ? (
-                  <CircularProgress size={25} color="primary" />
-                ) : (
-                  "Resend Email"
-                )}
-              </FormButton>
-            </Form>
-          </Paper>
-        ) : (
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <CustomAlert
-              message={message}
-              open={Boolean(message)}
-              onClose={() => setMessage("")}
-              severity="error"
-            />
-            <FormLegend>Let's get started</FormLegend>
-            <FormTextField
-              register={register}
-              name="firstname"
-              errors={errors}
-            />
-            <FormTextField
-              register={register}
-              name="lastname"
-              errors={errors}
-            />
-            <FormTextField register={register} name="email" errors={errors} />
-            <FormTextField
-              errors={errors}
-              name="password"
-              register={register}
-              type="password"
-            />
-            <FormTextField
-              errors={errors}
-              label="Confirm Password"
-              name="confirmPassword"
-              register={register}
-              type="password"
-            />
-            <HCaptcha
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY!}
-              size="invisible"
-              onError={setMessage}
-              onExpire={() => setMessage("Token has expired. Please try again")}
-              onVerify={onRegisterUser}
-            />
-            <FormButton disabled={isRegisteringUser}>
-              {isRegisteringUser ? (
-                <CircularProgress size={25} color="primary" />
-              ) : (
-                "Register"
-              )}
-            </FormButton>
-            <FormLink
-              linkText={"Login"}
-              href={TO_LOGIN_PAGE}
-              text={"Already have an account?"}
-            />
-          </Form>
-        )}
-      </FormContainer>
-    </EnhancedPaper>
+                <Form onSubmit={handleResendEmail}>
+                  <CustomAlert
+                    message={message}
+                    open={Boolean(message)}
+                    onClose={() => setMessage("")}
+                    severity={"error"}
+                  />
+                  <FormLegend variant="h6">
+                    Verify your email address
+                  </FormLegend>
+                  <FormLegend
+                    style={{ margin: "0.3rem auto 2rem auto" }}
+                    variant="body1"
+                  >
+                    An email containing verification instructions was sent to
+                    <strong> {watch("email")}.</strong> If you have not received
+                    a mail check your spam settings or check the spelling of
+                    your email address.
+                  </FormLegend>
+                  <FormButton disabled={isLoading}>
+                    {isLoading ? (
+                      <CircularProgress size={25} color="primary" />
+                    ) : (
+                      "Resend Email"
+                    )}
+                  </FormButton>
+                </Form>
+              </Paper>
+            ) : (
+              <Form onSubmit={handleSubmit(onSubmit)}>
+                <CustomAlert
+                  message={message}
+                  open={Boolean(message)}
+                  onClose={() => setMessage("")}
+                  severity="error"
+                />
+                <FormLegend>Let's get started</FormLegend>
+                <FormTextField
+                  register={register}
+                  name="firstname"
+                  errors={errors}
+                />
+                <FormTextField
+                  register={register}
+                  name="lastname"
+                  errors={errors}
+                />
+                <FormTextField
+                  register={register}
+                  name="email"
+                  errors={errors}
+                />
+                <FormTextField
+                  errors={errors}
+                  name="password"
+                  register={register}
+                  type="password"
+                />
+                <FormTextField
+                  errors={errors}
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  register={register}
+                  type="password"
+                />
+                <HCaptcha
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY!}
+                  size="invisible"
+                  onError={setMessage}
+                  onExpire={() =>
+                    setMessage("Token has expired. Please try again")
+                  }
+                  onVerify={onRegisterUser}
+                />
+                <FormButton disabled={isRegisteringUser}>
+                  {isRegisteringUser ? (
+                    <CircularProgress size={25} color="primary" />
+                  ) : (
+                    "Register"
+                  )}
+                </FormButton>
+                <FormLink
+                  linkText={"Login"}
+                  href={TO_LOGIN_PAGE}
+                  text={"Already have an account?"}
+                />
+              </Form>
+            )}
+          </FormContainer>
+        </EnhancedPaper>
+      )}
+    </>
   );
 };
 

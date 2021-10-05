@@ -80,11 +80,11 @@ const AccountSection: React.FC = () => {
     () => [
       {
         label: "Profile",
-        path: `${TO_DRIVERS_PAGE}/${user._id}`,
+        path: `${TO_DRIVERS_PAGE}/${user.id}`,
       },
       {
         label: "Favourites",
-        path: `${TO_DRIVERS_PAGE}/${user._id}/favourites`,
+        path: `${TO_DRIVERS_PAGE}/${user.id}/favourites`,
       },
       {
         label: "Become a Host",
@@ -99,7 +99,7 @@ const AccountSection: React.FC = () => {
         path: TO_SUPPORT_PAGE,
       },
     ],
-    [user._id]
+    [user.id]
   );
 
   return (
