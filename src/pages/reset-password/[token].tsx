@@ -19,7 +19,7 @@ import LoadingPage from "src/components/common/LoadingPage";
 import EnhancedPaper from "src/components/common/Paper";
 import SEO from "src/components/common/SEO";
 import { useRedirectedRoute } from "src/hooks";
-import { isObject, userResolver } from "src/services/validations";
+import { displayErrorMessages, userResolver } from "src/services/validations";
 import { resetPassword } from "src/services/api/auth";
 import { COMPANY_NAME, TO_LOGIN_PAGE } from "src/utils/constants";
 import { FormValues } from "src/utils/types";
@@ -44,10 +44,10 @@ const ResetPasswordPage = () => {
   });
   const { loading } = useRedirectedRoute();
 
-  const onResetPassword = async ({ password }: FormValues) => {
+  const onResetPassword = async (formData: FormValues) => {
     try {
       const { data, status } = await mutateAsync({
-        password,
+        password: formData.password,
         token: router.query.token as string,
       });
       if (status === 200) {
@@ -64,19 +64,7 @@ const ResetPasswordPage = () => {
       }, 3000);
     } catch (err) {
       const error = err as AxiosError;
-      const errors = error.response?.data;
-      if (errors && isObject(errors)) {
-        if (errors.message) {
-          setMessage(errors.message);
-          return;
-        }
-
-        setError("password", { message: errors.password });
-        setMessage(errors.token);
-        return;
-      }
-
-      setMessage(error.message);
+      displayErrorMessages({ error, formData, setError, setMessage });
     }
   };
 

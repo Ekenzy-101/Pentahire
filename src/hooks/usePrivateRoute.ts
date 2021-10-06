@@ -15,7 +15,7 @@ export function usePrivateRoute() {
         query: { next: router.pathname },
       });
     }
-  }, [isLoading]);
+  }, [isLoading, user]);
 
   return { loading: isLoading || !user };
 }

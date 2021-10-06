@@ -18,15 +18,16 @@ import {
 import EnhancedPaper from "src/components/common/Paper";
 import LoadingPage from "src/components/common/LoadingPage";
 import SEO from "src/components/common/SEO";
+import { useRedirectedRoute, usePrefetchPage } from "src/hooks";
 import { loginUser } from "src/services/api";
-import { isObject, userResolver } from "src/services/validations";
+import { displayErrorMessages, userResolver } from "src/services/validations";
 import {
   COMPANY_NAME,
   TO_FORGOT_PASSWORD_PAGE,
+  TO_HOME_PAGE,
   TO_REGISTER_PAGE,
 } from "src/utils/constants";
 import { FormValues, User } from "src/utils/types";
-import { useRedirectedRoute } from "src/hooks";
 
 const LoginPage = () => {
   const [message, setMessage] = useState("");
@@ -35,9 +36,6 @@ const LoginPage = () => {
     useMutation(loginUser);
   const client = useQueryClient();
   const router = useRouter();
-  const { loading } = useRedirectedRoute(
-    router.query.next as string | undefined
-  );
   const {
     formState: { errors },
     handleSubmit,
@@ -50,31 +48,17 @@ const LoginPage = () => {
     resolver: userResolver,
   });
 
-  const onSubmit = async (formData: FormValues) => {
+  const nextPath = router.query.next as string | undefined;
+  const { loading } = useRedirectedRoute(nextPath);
+  usePrefetchPage(nextPath || TO_HOME_PAGE);
+
+  const onLoginUser = async (formData: FormValues) => {
     try {
       const { data } = await mutateLoginAsync(formData);
       client.setQueryData("authUser", { user: data.user as User });
     } catch (err) {
       const error = err as AxiosError;
-      const fields = Object.keys(formData);
-      const errors = error.response?.data;
-
-      if (errors && isObject(errors)) {
-        if (errors.message) {
-          setMessage(errors.message);
-          return;
-        }
-
-        Object.keys(errors).forEach((errorKey) => {
-          if (fields.includes(errorKey)) {
-            setError(errorKey as keyof FormValues, {
-              message: errors[errorKey],
-            });
-          }
-        });
-        return;
-      }
-      setMessage(error.message);
+      displayErrorMessages({ error, formData, setError, setMessage });
     }
   };
 
@@ -87,7 +71,7 @@ const LoginPage = () => {
         <EnhancedPaper>
           <Header />
           <FormContainer>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onLoginUser)}>
               <CustomAlert
                 message={message}
                 open={Boolean(message)}

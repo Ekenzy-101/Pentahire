@@ -18,11 +18,12 @@ import {
 import LoadingPage from "src/components/common/LoadingPage";
 import EnhancedPaper from "src/components/common/Paper";
 import SEO from "src/components/common/SEO";
+import { useAuthUser, useRedirectedRoute } from "src/hooks";
 import { registerUser, sendVerifyEmailNotification } from "src/services/api";
-import { isObject, userResolver } from "src/services/validations";
+import { displayErrorMessages, userResolver } from "src/services/validations";
 import { COMPANY_NAME, TO_LOGIN_PAGE } from "src/utils/constants";
 import { FormValues } from "src/utils/types";
-import { useAuthUser, useRedirectedRoute } from "src/hooks";
+import { isObject } from "src/utils/helpers";
 
 const RegisterPage = () => {
   const [message, setMessage] = useState("");
@@ -60,7 +61,6 @@ const RegisterPage = () => {
     } catch (err) {
       const error = err as AxiosError;
       const errors = error.response?.data;
-
       if (errors && isObject(errors)) {
         if (errors.message) {
           setMessage(errors.message);
@@ -74,38 +74,19 @@ const RegisterPage = () => {
     }
   };
 
-  const onRegisterUser = async (hcaptcha_token: string) => {
+  const onRegisterUser = async (token: string) => {
     const formData = getValues();
     try {
-      if (!hcaptcha_token)
-        throw new Error("Please verify that you are a human");
+      if (!token) throw new Error("Please verify that you are a human");
 
       const { user } = await mutateRegisterAsync({
         ...formData,
-        hcaptcha_token,
+        token,
       });
       client.setQueryData("authUser", { user });
     } catch (err) {
       const error = err as AxiosError;
-      const fields = Object.keys(formData);
-      const errors = error.response?.data;
-
-      if (errors && isObject(errors)) {
-        if (errors.message) {
-          setMessage(errors.message);
-          return;
-        }
-
-        Object.keys(errors).forEach((errorKey) => {
-          if (fields.includes(errorKey)) {
-            setError(errorKey as keyof FormValues, {
-              message: errors[errorKey],
-            });
-          }
-        });
-        return;
-      }
-      setMessage(error.message);
+      displayErrorMessages({ error, formData, setError, setMessage });
     } finally {
       recaptchaRef.current?.resetCaptcha();
     }

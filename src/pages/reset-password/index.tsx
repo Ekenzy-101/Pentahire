@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { CircularProgress } from "@material-ui/core";
+import { Color } from "@material-ui/lab";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
@@ -19,14 +20,13 @@ import EnhancedPaper from "src/components/common/Paper";
 import SEO from "src/components/common/SEO";
 import { useRedirectedRoute } from "src/hooks";
 import { sendForgotPasswordNotification } from "src/services/api";
-import { isObject, userResolver } from "src/services/validations";
+import { displayErrorMessages, userResolver } from "src/services/validations";
 import { FormValues } from "src/utils/types";
 import {
   COMPANY_NAME,
   TO_LOGIN_PAGE,
   TO_REGISTER_PAGE,
 } from "src/utils/constants";
-import { Color } from "@material-ui/lab";
 
 const ForgotPasswordPage = () => {
   const [message, setMessage] = useState("");
@@ -53,27 +53,16 @@ const ForgotPasswordPage = () => {
     setSeverity("error");
   };
 
-  const onSendResetPasswordNotification = async ({ email }: FormValues) => {
+  const onSendResetPasswordNotification = async (formData: FormValues) => {
     try {
       const {
         data: { message },
-      } = await mutateAsync({ email });
+      } = await mutateAsync({ email: formData.email });
       setMessage(message);
       setSeverity("success");
     } catch (err) {
       const error = err as AxiosError;
-      const errors = error.response?.data;
-      if (errors && isObject(errors)) {
-        if (errors.email) {
-          setError("email", { message: errors.email });
-          return;
-        }
-
-        setMessage(errors.message);
-        return;
-      }
-
-      setMessage(error.message);
+      displayErrorMessages({ error, formData, setError, setMessage });
     }
   };
 

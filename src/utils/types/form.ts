@@ -1,3 +1,6 @@
+import { AxiosError } from "axios";
+import { UseFormSetError } from "react-hook-form";
+
 export interface UserFormValues {
   confirmPassword: string;
   email: string;
@@ -20,3 +23,10 @@ export interface VehicleFormValues {
 }
 
 export interface FormValues extends UserFormValues, VehicleFormValues {}
+
+export interface DisplayErrorMessagesProps {
+  error: AxiosError;
+  formData: FormValues;
+  setError: UseFormSetError<FormValues>;
+  setMessage: (value: string) => void;
+}

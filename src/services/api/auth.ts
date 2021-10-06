@@ -17,7 +17,7 @@ export async function getAuthUser(config?: AxiosRequestConfig) {
 }
 
 export async function registerUser(
-  formData: UserFormValues & { hcaptcha_token: string }
+  formData: UserFormValues & { token: string }
 ) {
   const { data } = await http.post("/auth/register", formData);
   return data as { user: User };
