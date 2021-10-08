@@ -24,6 +24,7 @@ import { displayErrorMessages, userResolver } from "src/services/validations";
 import { COMPANY_NAME, TO_LOGIN_PAGE } from "src/utils/constants";
 import { FormValues } from "src/utils/types";
 import { isObject } from "src/utils/helpers";
+import PasswordInfo from "src/components/modules/PasswordInfo";
 
 const RegisterPage = () => {
   const [message, setMessage] = useState("");
@@ -169,12 +170,14 @@ const RegisterPage = () => {
                   register={register}
                   type="password"
                 />
+                {errors.password?.message ? null : <PasswordInfo />}
                 <FormTextField
                   errors={errors}
                   label="Confirm Password"
                   name="confirmPassword"
                   register={register}
                   type="password"
+                  style={{ marginTop: 0 }}
                 />
                 <HCaptcha
                   ref={recaptchaRef}
