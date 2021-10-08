@@ -40,6 +40,13 @@ export const userResolver: Resolver<FormValues> = async (
   };
 };
 
+export function validateCode(value: string) {
+  return (
+    validator.isNumeric(value, { no_symbols: true }) &&
+    validator.isLength(value, { max: 6 })
+  );
+}
+
 function validateEmail(value: string) {
   if (!validator.isEmail(value)) return "Email is not valid";
 

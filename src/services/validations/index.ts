@@ -1,8 +1,7 @@
 import { isObject } from "src/utils/helpers";
 import { DisplayErrorMessagesProps, FormValues } from "src/utils/types";
 
-export { userResolver } from "./user";
-
+export * from "./user";
 export function displayErrorMessages({
   error,
   formData,

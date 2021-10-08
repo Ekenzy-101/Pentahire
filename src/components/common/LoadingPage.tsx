@@ -1,8 +1,15 @@
-import { CircularProgress, makeStyles, Paper } from "@material-ui/core";
+import {
+  CircularProgress,
+  CircularProgressProps,
+  makeStyles,
+  Paper,
+  PaperProps,
+} from "@material-ui/core";
 import React from "react";
 
 interface Props {
-  style?: React.CSSProperties;
+  rootProps?: PaperProps;
+  spinnerProps?: CircularProgressProps;
 }
 
 const useStyles = makeStyles(
@@ -19,11 +26,11 @@ const useStyles = makeStyles(
   { index: 1 }
 );
 
-const LoadingPage: React.FC<Props> = ({ style }) => {
+const LoadingPage: React.FC<Props> = ({ rootProps, spinnerProps }) => {
   const classes = useStyles();
   return (
-    <Paper className={classes.root} square variant="outlined" style={style}>
-      <CircularProgress size={40} color="primary" />
+    <Paper className={classes.root} square variant="outlined" {...rootProps}>
+      <CircularProgress size={40} color="primary" {...spinnerProps} />
     </Paper>
   );
 };
