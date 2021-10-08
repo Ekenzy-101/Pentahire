@@ -37,8 +37,9 @@ export const useStyles = makeStyles(({ palette }) => ({
     width: "100%",
   },
   legend: {
+    fontWeight: 500,
+    marginBottom: "1rem",
     textAlign: "center",
-    marginBottom: "0.5rem",
   },
   linkWrapper: {
     display: "flex",

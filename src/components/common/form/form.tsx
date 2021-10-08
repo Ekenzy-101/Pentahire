@@ -3,6 +3,7 @@ import {
   ButtonProps,
   Container,
   ContainerProps,
+  Paper,
   Typography,
   TypographyProps,
 } from "@material-ui/core";
@@ -10,6 +11,7 @@ import React from "react";
 
 import { useStyles } from "./styles";
 import EnhancedLink from "../Link";
+import { useScreenSizeDown } from "src/hooks";
 
 interface FormProps
   extends React.DetailedHTMLProps<
@@ -44,15 +46,30 @@ export const FormLegend: React.FC<TypographyProps<React.ElementType>> = (
     <Typography
       className={classes.legend}
       component="h1"
-      variant="h4"
+      variant="h5"
       {...props}
     />
   );
 };
 
-export const FormContainer: React.FC<ContainerProps> = (props) => {
+export const FormContainer: React.FC<ContainerProps> = ({
+  children,
+  ...props
+}) => {
   const classes = useStyles();
-  return <Container maxWidth="xs" className={classes.container} {...props} />;
+  const isSmallerScreenDown = useScreenSizeDown("xs");
+
+  return (
+    <Container maxWidth="xs" className={classes.container} {...props}>
+      <Paper
+        variant="elevation"
+        style={{ padding: isSmallerScreenDown ? "1rem" : "1.5rem" }}
+        elevation={3}
+      >
+        {children}
+      </Paper>
+    </Container>
+  );
 };
 
 interface FormLinkProps {

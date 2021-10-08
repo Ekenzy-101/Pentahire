@@ -9,7 +9,7 @@ export function useRedirectedRoute(path?: string) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && user) {
+    if (!isLoading && user && path != router.pathname) {
       router.push(path || TO_HOME_PAGE);
     }
   }, [isLoading, user]);

@@ -26,3 +26,7 @@ export async function registerUser(
 export function resetPassword(formData: { password: string; token: string }) {
   return http.post("/auth/reset-password", formData);
 }
+
+export function verifyLogin(formData: { email: string; code: string }) {
+  return http.post("/auth/login/verify", formData);
+}

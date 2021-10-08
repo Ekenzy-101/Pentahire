@@ -17,7 +17,7 @@ export function displayErrorMessages({
           message: errors[errorKey],
         });
       } else {
-        setMessage(errorKey);
+        setMessage(errors[errorKey]);
       }
     });
     return;

@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { CircularProgress, Paper } from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
@@ -17,25 +17,31 @@ import {
 } from "src/components/common/form";
 import LoadingPage from "src/components/common/LoadingPage";
 import EnhancedPaper from "src/components/common/Paper";
+import PasswordInfo from "src/components/modules/PasswordInfo";
 import SEO from "src/components/common/SEO";
-import { useAuthUser, useRedirectedRoute } from "src/hooks";
+import { useRedirectedRoute } from "src/hooks";
 import { registerUser, sendVerifyEmailNotification } from "src/services/api";
 import { displayErrorMessages, userResolver } from "src/services/validations";
-import { COMPANY_NAME, TO_LOGIN_PAGE } from "src/utils/constants";
+import {
+  COMPANY_NAME,
+  TO_LOGIN_PAGE,
+  TO_REGISTER_PAGE,
+} from "src/utils/constants";
 import { FormValues } from "src/utils/types";
 import { isObject } from "src/utils/helpers";
-import PasswordInfo from "src/components/modules/PasswordInfo";
 
 const RegisterPage = () => {
+  const [finalStep, setFinalStep] = useState(false);
   const [message, setMessage] = useState("");
   const recaptchaRef = useRef<HCaptcha>(null);
 
-  const { user } = useAuthUser();
   const { mutateAsync, isLoading } = useMutation(sendVerifyEmailNotification);
   const { mutateAsync: mutateRegisterAsync, isLoading: isRegisteringUser } =
     useMutation(registerUser);
   const client = useQueryClient();
-  const { loading } = useRedirectedRoute();
+  const { loading } = useRedirectedRoute(
+    finalStep ? TO_REGISTER_PAGE : undefined
+  );
   const {
     formState: { errors },
     getValues,
@@ -56,8 +62,9 @@ const RegisterPage = () => {
     resolver: userResolver,
   });
 
-  const handleResendEmail = async () => {
+  const handleResendEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
+      event.preventDefault();
       await mutateAsync({ email: getValues("email") });
     } catch (err) {
       const error = err as AxiosError;
@@ -84,6 +91,7 @@ const RegisterPage = () => {
         ...formData,
         token,
       });
+      setFinalStep(true);
       client.setQueryData("authUser", { user });
     } catch (err) {
       const error = err as AxiosError;
@@ -100,46 +108,35 @@ const RegisterPage = () => {
   return (
     <>
       <SEO title={`Register - ${COMPANY_NAME}`} />
-      {loading ? (
+      {loading && !finalStep ? (
         <LoadingPage />
       ) : (
         <EnhancedPaper>
           <Header />
           <FormContainer>
-            {user ? (
-              <Paper
-                variant="elevation"
-                style={{ padding: "1rem" }}
-                elevation={2}
-              >
-                <Form onSubmit={handleResendEmail}>
-                  <CustomAlert
-                    message={message}
-                    open={Boolean(message)}
-                    onClose={() => setMessage("")}
-                    severity={"error"}
-                  />
-                  <FormLegend variant="h6">
-                    Verify your email address
-                  </FormLegend>
-                  <FormLegend
-                    style={{ margin: "0.3rem auto 2rem auto" }}
-                    variant="body1"
-                  >
-                    An email containing verification instructions was sent to
-                    <strong> {watch("email")}.</strong> If you have not received
-                    a mail check your spam settings or check the spelling of
-                    your email address.
-                  </FormLegend>
-                  <FormButton disabled={isLoading}>
-                    {isLoading ? (
-                      <CircularProgress size={25} color="primary" />
-                    ) : (
-                      "Resend Email"
-                    )}
-                  </FormButton>
-                </Form>
-              </Paper>
+            {finalStep ? (
+              <Form onSubmit={handleResendEmail}>
+                <CustomAlert
+                  message={message}
+                  open={Boolean(message)}
+                  onClose={() => setMessage("")}
+                  severity={"error"}
+                />
+                <FormLegend>Verify your email address</FormLegend>
+                <Typography style={{ marginBottom: "1rem" }} variant="body1">
+                  An email containing verification instructions was sent to
+                  <strong> {watch("email")}.</strong> If you have not received a
+                  mail check your spam settings or check the spelling of your
+                  email address.
+                </Typography>
+                <FormButton disabled={isLoading}>
+                  {isLoading ? (
+                    <CircularProgress size={25} color="primary" />
+                  ) : (
+                    "Resend Email"
+                  )}
+                </FormButton>
+              </Form>
             ) : (
               <Form onSubmit={handleSubmit(onSubmit)}>
                 <CustomAlert

@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -83,10 +83,10 @@ const ForgotPasswordPage = () => {
                 severity={severity}
               />
               <FormLegend>Forgot Password</FormLegend>
-              <FormLegend style={{ margin: "0.3rem auto" }} variant="body1">
+              <Typography style={{ marginBottom: "0.5rem" }}>
                 Please enter the email you registered your account with and we
                 will email you a link where you can reset your password.
-              </FormLegend>
+              </Typography>
               <FormTextField register={register} name="email" errors={errors} />
               <FormButton disabled={isLoading}>
                 {isLoading ? (
