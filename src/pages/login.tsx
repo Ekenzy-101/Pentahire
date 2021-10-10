@@ -18,7 +18,7 @@ import {
 import EnhancedPaper from "src/components/common/Paper";
 import LoadingPage from "src/components/common/LoadingPage";
 import SEO from "src/components/common/SEO";
-import { useRedirectedRoute, usePrefetchPage } from "src/hooks";
+import { useRedirectedRoute, usePrefetchPage, useSuccess } from "src/hooks";
 import { loginUser, verifyLogin } from "src/services/api";
 import {
   displayErrorMessages,
@@ -39,11 +39,6 @@ const LoginPage = () => {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
 
-  const { mutateAsync: mutateLoginAsync, isLoading: isLoggingInUser } =
-    useMutation(loginUser);
-  const { mutateAsync, isLoading } = useMutation(verifyLogin);
-  const client = useQueryClient();
-  const router = useRouter();
   const {
     formState: { errors },
     getValues,
@@ -58,10 +53,15 @@ const LoginPage = () => {
     defaultValues: { email: "", password: "" },
     resolver: userResolver,
   });
-
+  const { mutateAsync: mutateLoginAsync, isLoading: isLoggingInUser } =
+    useMutation(loginUser);
+  const { mutateAsync, isLoading } = useMutation(verifyLogin);
+  const client = useQueryClient();
+  const router = useRouter();
   const nextPath = router.query.next as string | undefined;
-  const { loading } = useRedirectedRoute(nextPath);
   usePrefetchPage(nextPath || TO_HOME_PAGE);
+  const { loading } = useRedirectedRoute(nextPath);
+  useSuccess();
 
   const onLoginUser = async (formData: FormValues) => {
     try {

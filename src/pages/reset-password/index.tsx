@@ -61,6 +61,7 @@ const ForgotPasswordPage = () => {
       setMessage(message);
       setSeverity("success");
     } catch (err) {
+      setSeverity("error");
       const error = err as AxiosError;
       displayErrorMessages({ error, formData, setError, setMessage });
     }
