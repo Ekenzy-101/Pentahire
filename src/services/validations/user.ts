@@ -7,7 +7,7 @@ const validate: Record<string, (value: any) => string | undefined> = {
   email: validateEmail,
   firstname: validateName("Firstname"),
   lastname: validateName("Lastname"),
-  newPassword: validatePassword,
+  oldPassword: validatePassword,
   password: validatePassword,
   subject: validateRequiredField("Subject"),
   message: validateRequiredField("Message"),

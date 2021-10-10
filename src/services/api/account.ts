@@ -14,3 +14,10 @@ export async function getOTPKey() {
   );
   return data;
 }
+
+export async function updatePassword(formData: {
+  old_password: string;
+  new_password: string;
+}) {
+  return http.put("/account/password", formData);
+}

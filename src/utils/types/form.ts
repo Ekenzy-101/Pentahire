@@ -7,7 +7,7 @@ export interface UserFormValues {
   endDate: Date;
   firstname: string;
   lastname: string;
-  newPassword: string;
+  oldPassword: string;
   password: string;
   subject: string;
   message: string;

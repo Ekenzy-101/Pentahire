@@ -1,13 +1,61 @@
-import { Typography } from "@material-ui/core";
-import React from "react";
+import { AxiosError } from "axios";
+import { CircularProgress, Typography } from "@material-ui/core";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useMutation } from "react-query";
 
+import CustomAlert from "src/components/common/alert";
 import { Form, FormButton, FormTextField } from "src/components/common/form";
+import { useSectionStyles } from "./styles";
+import { userResolver } from "src/services/validations";
+import { updatePassword } from "src/services/api";
+import { isObject } from "src/utils/helpers";
+import { FormValues } from "src/utils/types";
 import AccountSection from "./AccountSection";
 import PasswordInfo from "../PasswordInfo";
-import { useSectionStyles } from "./styles";
 
 const AccountPasswordSection = () => {
+  const [message, setMessage] = useState("");
   const classes = useSectionStyles();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    setError,
+  } = useForm<FormValues>({
+    mode: "onBlur",
+    reValidateMode: "onChange",
+    defaultValues: { oldPassword: "", password: "", confirmPassword: "" },
+    resolver: userResolver,
+  });
+  const { mutateAsync, isLoading } = useMutation(updatePassword);
+
+  const onUpdatePassword = async ({ oldPassword, password }: FormValues) => {
+    try {
+      await mutateAsync({ old_password: oldPassword, new_password: password });
+      toast.success("Password updated successfully");
+    } catch (err) {
+      const error = err as AxiosError;
+      const errors = error.response?.data;
+      if (isObject(errors)) {
+        setError("password", { message: errors.new_password });
+        setError("oldPassword", { message: errors.old_password });
+        setMessage(errors.message);
+        return;
+      }
+
+      setMessage(error.message);
+    }
+  };
+
+  const commonProps = {
+    className: classes.textField,
+    errors,
+    register,
+    type: "password",
+  };
+
   return (
     <AccountSection
       description={
@@ -16,28 +64,37 @@ const AccountPasswordSection = () => {
         </Typography>
       }
       content={
-        <Form>
+        <Form onSubmit={handleSubmit(onUpdatePassword)}>
+          <CustomAlert
+            message={message}
+            open={Boolean(message)}
+            onClose={() => setMessage("")}
+            severity="error"
+          />
           <FormTextField
-            className={classes.textField}
-            name="email"
+            name="oldPassword"
             label="Old Password"
-            errors={{}}
+            {...commonProps}
           />
           <br />
           <FormTextField
-            className={classes.textField}
-            name="firstname"
+            name="password"
             label="New Password"
-            errors={{}}
+            {...commonProps}
           />
           <PasswordInfo />
           <FormTextField
-            className={classes.textField}
-            name="lastname"
+            name="confirmPassword"
             label="Confirm New Password"
-            errors={{}}
+            {...commonProps}
           />
-          <FormButton>Change Password</FormButton>
+          <FormButton>
+            {isLoading ? (
+              <CircularProgress size={25} color="primary" />
+            ) : (
+              "Update Password"
+            )}
+          </FormButton>
         </Form>
       }
     />
