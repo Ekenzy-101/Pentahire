@@ -15,7 +15,7 @@ const AccountSection: React.FC<Props> = ({ content, description }) => {
         <Box maxWidth={isSmallScreen ? "none" : "350px"}>{description}</Box>
       </Grid>
       <Grid item xs={12} sm={8} md={7}>
-        <Box maxWidth={isSmallScreen ? "none" : "350px"}>{content}</Box>
+        <Box maxWidth={isSmallScreen ? "none" : "375px"}>{content}</Box>
       </Grid>
     </Grid>
   );

@@ -1,13 +1,65 @@
-import { Avatar, Box, Typography } from "@material-ui/core";
-import React from "react";
+import { Avatar, Box, CircularProgress, Typography } from "@material-ui/core";
+import { AxiosError } from "axios";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "react-query";
 
+import CustomAlert from "src/components/common/alert";
 import { Form, FormButton, FormTextField } from "src/components/common/form";
+import { useAuthUser } from "src/hooks";
+import { updateProfile } from "src/services/api";
+import { displayErrorMessages, userResolver } from "src/services/validations";
 import { DEFAULT_USER_IMAGE_URL } from "src/utils/constants";
+import { FormValues, User } from "src/utils/types";
 import AccountSection from "./AccountSection";
 import { useSectionStyles } from "./styles";
 
 const AccountProfileSection = () => {
+  const [message, setMessage] = useState("");
+
+  const { user } = useAuthUser() as { user: User };
+  const { isLoading, mutateAsync } = useMutation(updateProfile);
+  const client = useQueryClient();
   const classes = useSectionStyles();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    setError,
+    watch,
+  } = useForm<FormValues>({
+    mode: "onBlur",
+    reValidateMode: "onChange",
+    defaultValues: {
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+    },
+    resolver: userResolver,
+  });
+
+  const onUpdateProfile = async (formData: FormValues) => {
+    try {
+      const { email, firstname, lastname } = formData;
+      await mutateAsync({ email, firstname, lastname });
+
+      client.setQueryData<{ user: User | null }>("authUser", (previousData) => {
+        if (!previousData) return { user: null };
+
+        return { user: { ...previousData.user!, email, firstname, lastname } };
+      });
+      toast.success("Profile updated successfully");
+    } catch (err) {
+      const error = err as AxiosError;
+      displayErrorMessages({ error, formData, setError, setMessage });
+    }
+  };
+
+  const keys = ["email", "firstname", "lastname"] as const;
+  const disabled = watch(keys).every(
+    (value, index) => value === user[keys[index]]
+  );
   return (
     <AccountSection
       description={
@@ -30,11 +82,19 @@ const AccountProfileSection = () => {
             />
             <Typography color="primary">Change Profile Picture</Typography>
           </Box>
-          <Form>
+          <Form onSubmit={handleSubmit(onUpdateProfile)}>
+            <CustomAlert
+              message={message}
+              open={Boolean(message)}
+              onClose={() => setMessage("")}
+              severity="error"
+            />
+            <br />
             <FormTextField
               className={classes.textField}
               name="email"
-              errors={{}}
+              errors={errors}
+              register={register}
             />
             <Typography
               color="textSecondary"
@@ -48,14 +108,22 @@ const AccountProfileSection = () => {
             <FormTextField
               className={classes.textField}
               name="firstname"
-              errors={{}}
+              errors={errors}
+              register={register}
             />
             <FormTextField
               className={classes.textField}
               name="lastname"
-              errors={{}}
+              errors={errors}
+              register={register}
             />
-            <FormButton>Edit Profile</FormButton>
+            <FormButton disabled={disabled || isLoading}>
+              {isLoading ? (
+                <CircularProgress size={25} color="primary" />
+              ) : (
+                "Update Profile"
+              )}
+            </FormButton>
           </Form>
         </>
       }

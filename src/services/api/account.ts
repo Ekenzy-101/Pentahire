@@ -1,3 +1,4 @@
+import { FormValues } from "src/utils/types";
 import { http } from "./http";
 
 export function confirmOTPKey(formData: { code: string }) {
@@ -15,9 +16,13 @@ export async function getOTPKey() {
   return data;
 }
 
-export async function updatePassword(formData: {
+export function updatePassword(formData: {
   old_password: string;
   new_password: string;
 }) {
   return http.put("/account/password", formData);
+}
+
+export function updateProfile(formData: Partial<FormValues>) {
+  return http.put("/account/profile", formData);
 }

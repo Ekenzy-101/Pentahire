@@ -88,7 +88,7 @@ const AccountPasswordSection = () => {
             label="Confirm New Password"
             {...commonProps}
           />
-          <FormButton>
+          <FormButton disabled={isLoading}>
             {isLoading ? (
               <CircularProgress size={25} color="primary" />
             ) : (
