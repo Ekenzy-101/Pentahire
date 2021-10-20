@@ -13,7 +13,7 @@ import { updatePassword } from "src/services/api";
 import { isObject } from "src/utils/helpers";
 import { FormValues } from "src/utils/types";
 import AccountSection from "./AccountSection";
-import PasswordInfo from "../PasswordInfo";
+import PasswordInfo from "../../common/PasswordInfo";
 
 const AccountPasswordSection = () => {
   const [message, setMessage] = useState("");

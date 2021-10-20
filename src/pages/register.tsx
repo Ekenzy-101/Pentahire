@@ -17,7 +17,7 @@ import {
 } from "src/components/common/form";
 import LoadingPage from "src/components/common/LoadingPage";
 import EnhancedPaper from "src/components/common/Paper";
-import PasswordInfo from "src/components/modules/PasswordInfo";
+import PasswordInfo from "src/components/common/PasswordInfo";
 import SEO from "src/components/common/SEO";
 import { useRedirectedRoute } from "src/hooks";
 import { registerUser, sendVerifyEmailNotification } from "src/services/api";

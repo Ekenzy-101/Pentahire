@@ -2,7 +2,6 @@ import React from "react";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import clsx from "clsx";
-import { isSameDay } from "date-fns";
 import {
   TextFieldProps,
   TextField,
@@ -20,8 +19,8 @@ import {
 } from "@material-ui/pickers";
 import { UseFormRegister, DeepMap, FieldError } from "react-hook-form";
 
-import { FormValues } from "../../../utils/types/form";
 import { useStyles } from "./styles";
+import { FormValues } from "src/utils/types";
 interface Option {
   value: string;
   label: string;
@@ -29,9 +28,9 @@ interface Option {
 
 interface ExternalFieldProps {
   options?: Option[];
-  errors: DeepMap<FormValues, FieldError>;
+  errors?: DeepMap<FormValues, FieldError>;
   name: keyof Omit<FormValues, "image">;
-  register: UseFormRegister<FormValues>;
+  register?: UseFormRegister<FormValues>;
 }
 
 type FormTextFieldProps = TextFieldProps & ExternalFieldProps;
@@ -42,19 +41,20 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   errors,
   select,
   options,
+  style,
   ...textFieldProps
 }) => {
   const commonProps = {
-    error: Boolean(errors[name]?.message),
-    helperText: errors[name]?.message,
+    error: Boolean(errors && errors[name]?.message),
+    helperText: errors && errors[name]?.message,
     fullWidth: true,
-    inputRef: register(name).ref,
+    inputRef: register?.(name).ref,
     label: capitalize(name),
-    onChange: register(name).onChange,
-    onBlur: register(name).onBlur,
+    onChange: register?.(name).onChange,
+    onBlur: register?.(name).onBlur,
     name,
     size: "small" as const,
-    style: { margin: "1rem auto" },
+    style: { margin: "1rem auto", ...style },
     variant: "outlined" as const,
   };
 
@@ -88,13 +88,13 @@ export const FormTextArea: React.FC<FormTextAreaProps> = ({
   const classes = useStyles();
 
   const commonProps = {
-    ...register(name),
+    ...register?.(name),
     placeholder: capitalize(name),
     maxLength: 1000,
     rowsMax: 10,
     rowsMin: 6,
   };
-  const message = errors[name]?.message;
+  const message = errors && errors[name]?.message;
 
   return (
     <Box marginBottom="1rem">
@@ -127,23 +127,18 @@ export const FormDatePicker: React.FC<FormDatePickerProps> = ({
   ...pickerProps
 }) => {
   const commonProps = {
-    error: Boolean(errors[name]?.message),
-    helperText: errors[name]?.message,
+    error: Boolean(errors && errors[name]?.message),
+    helperText: errors && errors[name]?.message,
     fullWidth: true,
     disablePast: true,
     label: capitalize(name),
     name,
     size: "small" as const,
-    style: { margin: "1rem auto" },
     variant: "inline" as const,
   };
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        {...commonProps}
-        {...pickerProps}
-        shouldDisableDate={(day) => isSameDay(day!, new Date())}
-      />
+      <KeyboardDatePicker {...commonProps} {...pickerProps} />
     </MuiPickersUtilsProvider>
   );
 };
@@ -178,7 +173,7 @@ export const FormFileField: React.FC<FormFileFieldProps> = ({
     }
   };
 
-  const message = (errors[name] as any)?.message;
+  const message = errors && (errors[name] as any)?.message;
   return (
     <>
       <Box

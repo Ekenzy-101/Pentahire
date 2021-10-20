@@ -18,8 +18,8 @@ interface FormProps
     React.FormHTMLAttributes<HTMLFormElement>,
     HTMLFormElement
   > {}
-export const Form: React.FC<FormProps> = (props) => {
-  return <form style={{ width: "100%" }} {...props}></form>;
+export const Form: React.FC<FormProps> = ({ style, ...props }) => {
+  return <form style={{ width: "100%", ...style }} {...props}></form>;
 };
 
 export const FormButton: React.FC<ButtonProps> = (props) => {

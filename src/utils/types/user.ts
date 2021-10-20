@@ -1,6 +1,7 @@
 export interface User {
   id: string;
-  averate_rating: string;
+  averate_rating: number;
+  created_at: string;
   email: string;
   firstname: string;
   image: string;
@@ -9,4 +10,6 @@ export interface User {
   is_phone_verified: boolean;
   lastname: string;
   phone_no: string;
+  reviews_count: number;
+  trips_count: number;
 }
