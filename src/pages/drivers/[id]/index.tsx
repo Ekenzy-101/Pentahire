@@ -1,23 +1,35 @@
 import React from "react";
 
 import Header from "src/components/common/header";
+import LoadingPage from "src/components/common/LoadingPage";
+import NotFoundBody from "src/components/common/NotFound";
 import EnhancedPaper from "src/components/common/Paper";
 import SEO from "src/components/common/SEO";
 import DriverBody from "src/components/modules/driver";
+import { useUser } from "src/hooks";
 import { COMPANY_NAME } from "src/utils/constants";
 
 const DriverPage = () => {
-  const userHasCar = true;
+  const { data, isLoading } = useUser();
+  const user = data?.user;
 
   return (
     <EnhancedPaper>
       <Header />
       <SEO
-        title={`${
-          userHasCar ? "Book a Car with Onyekaba" : "Onyekaba"
-        } - ${COMPANY_NAME}`}
+        title={
+          user
+            ? `${
+                user.vehicles.length
+                  ? `Book a Car with ${user.firstname}`
+                  : user.firstname
+              } - ${COMPANY_NAME}`
+            : isLoading
+            ? `Driver Profile - ${COMPANY_NAME}`
+            : `This page doesn't exist - ${COMPANY_NAME}`
+        }
       />
-      <DriverBody />
+      {user ? <DriverBody /> : isLoading ? <LoadingPage /> : <NotFoundBody />}
     </EnhancedPaper>
   );
 };

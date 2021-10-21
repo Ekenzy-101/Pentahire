@@ -2,7 +2,7 @@ import { Location } from "./location";
 import { User } from "./user";
 
 export interface Vehicle {
-  _id: string;
+  id: string;
   address: string;
   average_rating: number;
   created_at?: string;

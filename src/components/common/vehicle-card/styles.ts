@@ -33,10 +33,6 @@ export const useStyles = makeStyles(
       top: 5,
       zIndex: 200,
     },
-    link: {
-      textDecoration: "none",
-      color: "inherit",
-    },
     media: {
       height: "20rem",
       width: "100%",

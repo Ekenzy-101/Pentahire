@@ -1,5 +1,4 @@
 import {
-  Box,
   Card,
   CardContent,
   CardMedia,
@@ -9,11 +8,14 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Favorite, FavoriteBorder, Star } from "@material-ui/icons";
-import Link from "next/link";
 import React from "react";
 
-import { TO_VEHICLES_PAGE } from "src/utils/constants";
+import {
+  FALLBACK_VEHICLE_IMAGE_URL,
+  TO_VEHICLES_PAGE,
+} from "src/utils/constants";
 import { Vehicle } from "src/utils/types";
+import EnhancedLink from "../Link";
 import { useStyles } from "./styles";
 
 interface Props {
@@ -36,32 +38,40 @@ const VehicleCard: React.FC<Props> = ({ vehicle, mediaClassName }) => {
           <FavoriteBorder className={classes.favouriteBorder} />
         )}
       </IconButton>
-      <Link href={`${TO_VEHICLES_PAGE}/${vehicle._id}`}>
-        <a className={classes.link}>
-          <Box overflow="hidden">
-            <CardMedia
-              className={mediaClassName || classes.media}
-              image={"/images/vehicle.jpg" || vehicle.image}
-              title={vehicle.name}
-            />
-          </Box>
 
-          <CardContent className={classes.cardContent}>
-            <Typography className={classes.title} variant="h6">
-              {vehicle.name}
+      <EnhancedLink href={`${TO_VEHICLES_PAGE}/${vehicle.id}`}>
+        <div style={{ overflow: "hidden" }}>
+          <CardMedia
+            className={mediaClassName || classes.media}
+            image={vehicle.image || FALLBACK_VEHICLE_IMAGE_URL}
+            title={vehicle.name}
+          />
+        </div>
+
+        <CardContent className={classes.cardContent}>
+          <Typography className={classes.title} variant="h6">
+            {vehicle.name}
+          </Typography>
+          <Typography className={classes.subTitle}>
+            {vehicle.average_rating ? (
+              <>
+                {vehicle.average_rating}{" "}
+                <Star fontSize="inherit" color="primary" />{" "}
+              </>
+            ) : vehicle.trips_count ? (
+              <>({vehicle.trips_count} trips)</>
+            ) : (
+              <p></p>
+            )}
+          </Typography>
+          <Divider className={classes.divider} />
+          <div style={{ display: "flex" }}>
+            <Typography className={classes.rentalFee}>
+              ${vehicle.rental_fee}/day
             </Typography>
-            <Typography className={classes.subTitle}>
-              5.0 <Star fontSize="inherit" color="primary" /> (52 trips)
-            </Typography>
-            <Divider className={classes.divider} />
-            <Box display="flex">
-              <Typography className={classes.rentalFee}>
-                ${vehicle.rental_fee}/day
-              </Typography>
-            </Box>
-          </CardContent>
-        </a>
-      </Link>
+          </div>
+        </CardContent>
+      </EnhancedLink>
     </Card>
   );
 };

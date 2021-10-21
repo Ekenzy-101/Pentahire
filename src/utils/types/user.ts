@@ -1,3 +1,5 @@
+import { Vehicle } from "./vehicle";
+
 export interface User {
   id: string;
   averate_rating: number;
@@ -12,4 +14,5 @@ export interface User {
   phone_no: string;
   reviews_count: number;
   trips_count: number;
+  vehicles: Vehicle[];
 }
