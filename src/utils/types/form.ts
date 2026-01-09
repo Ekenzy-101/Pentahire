@@ -25,7 +25,7 @@ export interface VehicleFormValues {
 export interface FormValues extends UserFormValues, VehicleFormValues {}
 
 export interface DisplayErrorMessagesProps {
-  error: AxiosError;
+  error: AxiosError<Record<string, string>>;
   formData: FormValues;
   setError: UseFormSetError<FormValues>;
   setMessage: (value: string) => void;

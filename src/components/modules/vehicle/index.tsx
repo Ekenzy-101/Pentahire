@@ -5,9 +5,8 @@ import {
   Container,
   Grid,
   IconButton,
-} from "@material-ui/core";
-import { Favorite, FavoriteBorder } from "@material-ui/icons";
-import React from "react";
+} from "@mui/material";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 import SimilarCarsSlider from "../sliders/SimilarCarsSlider";
 import VehicleBooking from "./Booking";
@@ -18,7 +17,7 @@ import VehicleReviews from "./Reviews";
 import { useStyles } from "./styles";
 
 const VehicleBody: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const isTogglingFavourite = false;
   const isFavourite = true;
 
@@ -38,7 +37,7 @@ const VehicleBody: React.FC = () => {
 
   return (
     <>
-      <Box position="relative">
+      <Box component="div" position="relative">
         <Avatar
           alt="Banner"
           className={classes.banner}
@@ -52,13 +51,13 @@ const VehicleBody: React.FC = () => {
 
       <Container style={{ marginBottom: 40 }} maxWidth="lg">
         <Grid className={classes.gridContainer} container spacing={2}>
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 7 }}>
             <VehicleDetails />
             <VehicleOwner />
             <VehicleLocation />
             <VehicleReviews />
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <VehicleBooking
               btnIcon={favouriteIconElement}
               btnText={favouriteBtnText}

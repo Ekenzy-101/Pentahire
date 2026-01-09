@@ -3,24 +3,24 @@ import {
   Button,
   ButtonProps,
   Chip,
+  Rating,
   Typography,
   TypographyProps,
-} from "@material-ui/core";
-import { Rating } from "@material-ui/lab";
-import React from "react";
+} from "@mui/material";
+import { FC, PropsWithChildren, ReactNode } from "react";
 
 import { useStyles } from "./styles";
 
 interface AvatarWithBadgeProps {
-  avatar: React.ReactNode;
+  avatar: ReactNode;
   rating: number;
 }
 
-export const SectionAvatarWithBadge: React.FC<AvatarWithBadgeProps> = ({
+export const SectionAvatarWithBadge: FC<AvatarWithBadgeProps> = ({
   avatar,
   rating,
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Badge
       anchorOrigin={{
@@ -40,17 +40,14 @@ export const SectionAvatarWithBadge: React.FC<AvatarWithBadgeProps> = ({
       }
       children={avatar}
       classes={{
-        anchorOriginBottomLeftRectangle: classes.badgeAnchor,
+        anchorOriginBottomLeftRectangular: classes.badgeAnchor,
       }}
       component="div"
     />
   );
 };
 
-export const SectionButton: React.FC<ButtonProps> = ({
-  style,
-  ...otherProps
-}) => {
+export const SectionButton: FC<ButtonProps> = ({ style, ...otherProps }) => {
   return (
     <Button
       color="primary"
@@ -62,7 +59,7 @@ export const SectionButton: React.FC<ButtonProps> = ({
   );
 };
 
-export const SectionHeading: React.FC<TypographyProps> = ({
+export const SectionHeading: FC<TypographyProps> = ({
   style,
   ...otherProps
 }) => {
@@ -80,8 +77,8 @@ interface RatingProps {
   text: string;
 }
 
-export const SectionRating: React.FC<RatingProps> = ({ rating, text }) => {
-  const classes = useStyles();
+export const SectionRating: FC<RatingProps> = ({ rating, text }) => {
+  const { classes } = useStyles();
   return (
     <Typography className={classes.root}>
       <strong className={classes.ratingText}>4.8</strong>
@@ -97,6 +94,6 @@ export const SectionRating: React.FC<RatingProps> = ({ rating, text }) => {
   );
 };
 
-export const SectionContainer: React.FC = ({ children }) => (
+export const SectionContainer: FC<PropsWithChildren> = ({ children }) => (
   <div style={{ marginTop: 40 }} children={children} />
 );

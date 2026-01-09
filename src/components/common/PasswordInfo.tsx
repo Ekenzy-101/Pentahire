@@ -1,12 +1,12 @@
-import { Box, Typography } from "@material-ui/core";
-import React from "react";
+import { Box, Typography } from "@mui/material";
 
 const PasswordInfo: React.FC = () => {
   return (
     <Box
+      component="div"
       display="flex"
       flexDirection="column"
-      gridGap="5px"
+      gap="5px"
       marginBottom="0.5rem"
       marginTop="-0.5rem"
     >

@@ -1,10 +1,9 @@
 import { AxiosError } from "axios";
-import { CircularProgress, Typography } from "@material-ui/core";
-import { Color } from "@material-ui/lab";
+import { AlertColor, CircularProgress, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import CustomAlert from "src/components/common/alert";
 import Header from "src/components/common/header";
@@ -24,10 +23,10 @@ import { COMPANY_NAME, TO_HOME_PAGE } from "src/utils/constants";
 import { isObject } from "src/utils/helpers";
 import { FormValues } from "src/utils/types";
 
-const VerifyEmailPage = () => {
+const VerifyEmailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState<Color>("error");
+  const [severity, setSeverity] = useState<AlertColor>("error");
 
   const {
     formState: { errors },
@@ -40,7 +39,9 @@ const VerifyEmailPage = () => {
     defaultValues: { email: "" },
     resolver: userResolver,
   });
-  const { isLoading, mutateAsync } = useMutation(sendVerifyEmailNotification);
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: sendVerifyEmailNotification,
+  });
   usePrefetchPage(TO_HOME_PAGE);
   const router = useRouter();
   const token = router.query.token as string;
@@ -54,7 +55,7 @@ const VerifyEmailPage = () => {
             query: { success: "Email verification was successful" },
           });
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<any>) => {
           const errors = error.response?.data;
           setLoading(false);
           if (isObject(errors)) {
@@ -74,7 +75,7 @@ const VerifyEmailPage = () => {
       setMessage("Mail has been sent successfully");
     } catch (err) {
       setSeverity("error");
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       const errors = error.response?.data;
       if (isObject(errors)) {
         setMessage(errors.message);
@@ -108,8 +109,8 @@ const VerifyEmailPage = () => {
                 email
               </Typography>
               <FormTextField register={register} name="email" errors={errors} />
-              <FormButton disabled={isLoading}>
-                {isLoading ? (
+              <FormButton disabled={isPending}>
+                {isPending ? (
                   <CircularProgress size={25} color="primary" />
                 ) : (
                   "Resend Verification Link"

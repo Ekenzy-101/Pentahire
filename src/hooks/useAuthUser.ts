@@ -1,11 +1,13 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getAuthUser } from "src/services/api";
 
 export function useAuthUser() {
   const MILLI_SECONDS_IN_ONE_HOUR = 1000 * 60 * 60;
-  const { data, isLoading } = useQuery("authUser", () => getAuthUser(), {
-    cacheTime: MILLI_SECONDS_IN_ONE_HOUR,
+  const { data, isPending } = useQuery({
+    queryKey: ["authUser"],
+    queryFn: () => getAuthUser(),
+    staleTime: MILLI_SECONDS_IN_ONE_HOUR,
   });
 
-  return { user: data?.user, isLoading };
+  return { user: data?.user, isPending };
 }

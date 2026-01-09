@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
-import { CircularProgress, TextField, Typography } from "@material-ui/core";
+import { CircularProgress, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import CustomAlert from "src/components/common/alert";
 import Header from "src/components/common/header";
@@ -53,9 +53,9 @@ const LoginPage = () => {
     defaultValues: { email: "", password: "" },
     resolver: userResolver,
   });
-  const { mutateAsync: mutateLoginAsync, isLoading: isLoggingInUser } =
-    useMutation(loginUser);
-  const { mutateAsync, isLoading } = useMutation(verifyLogin);
+  const { mutateAsync: mutateLoginAsync, isPending: isLoggingInUser } =
+    useMutation({ mutationFn: loginUser });
+  const { mutateAsync, isPending } = useMutation({ mutationFn: verifyLogin });
   const client = useQueryClient();
   const router = useRouter();
   const nextPath = router.query.next as string | undefined;
@@ -70,9 +70,9 @@ const LoginPage = () => {
         setFinalStep(true);
         return;
       }
-      client.setQueryData("authUser", { user: data.user as User });
+      client.setQueryData(["authUser"], { user: data.user as User });
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       displayErrorMessages({ error, formData, setError, setMessage });
     }
   };
@@ -96,9 +96,9 @@ const LoginPage = () => {
     try {
       event.preventDefault();
       const { data } = await mutateAsync({ email: getValues("email"), code });
-      client.setQueryData("authUser", { user: data.user as User });
+      client.setQueryData(["authUser"], { user: data.user as User });
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       const errors = error.response?.data;
       if (isObject(errors)) {
         setMessage(errors.message);
@@ -151,8 +151,8 @@ const LoginPage = () => {
                   value={code}
                   variant="outlined"
                 />
-                <FormButton disabled={isLoading}>
-                  {isLoading ? (
+                <FormButton disabled={isPending}>
+                  {isPending ? (
                     <CircularProgress size={25} color="primary" />
                   ) : (
                     "Submit"

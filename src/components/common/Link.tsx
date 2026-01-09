@@ -1,7 +1,6 @@
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/styles";
 import Link from "next/link";
-import React, { forwardRef } from "react";
+import React from "react";
+import { makeStyles } from "tss-react/mui";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -11,23 +10,13 @@ interface Props
   href: string;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: { textDecoration: "none", color: "initial" },
 }));
 
-const EnhancedLink = forwardRef<HTMLAnchorElement, Props>(
-  ({ href, className, ...anchorProps }, ref) => {
-    const classes = useStyles();
-    return (
-      <Link href={href}>
-        <a
-          className={clsx(classes.root, className)}
-          ref={ref}
-          {...anchorProps}
-        />
-      </Link>
-    );
-  }
-);
+const EnhancedLink: React.FC<Props> = ({ className, ...anchorProps }) => {
+  const { classes, cx } = useStyles();
+  return <Link className={cx(classes.root, className)} {...anchorProps} />;
+};
 
 export default EnhancedLink;

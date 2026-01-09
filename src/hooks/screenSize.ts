@@ -1,5 +1,4 @@
-import { useMediaQuery, Theme } from "@material-ui/core";
-import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
+import { useMediaQuery, Theme, Breakpoint } from "@mui/material";
 
 export function useScreenSizeBetween(key: number | Breakpoint) {
   return useMediaQuery((theme: Theme) => theme.breakpoints.down(key));

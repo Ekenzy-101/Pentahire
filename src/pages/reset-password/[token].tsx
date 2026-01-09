@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import CustomAlert from "src/components/common/alert";
 import Header from "src/components/common/header";
@@ -26,7 +26,7 @@ import { FormValues } from "src/utils/types";
 const ResetPasswordPage = () => {
   const [message, setMessage] = useState("");
 
-  const { mutateAsync, isLoading } = useMutation(resetPassword);
+  const { mutateAsync, isPending } = useMutation({ mutationFn: resetPassword });
   const router = useRouter();
   const {
     formState: { errors },
@@ -52,7 +52,7 @@ const ResetPasswordPage = () => {
         query: { success: "Password reset was successful" },
       });
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       displayErrorMessages({ error, formData, setError, setMessage });
     }
   };
@@ -88,8 +88,8 @@ const ResetPasswordPage = () => {
                 register={register}
                 type="password"
               />
-              <FormButton disabled={isLoading}>
-                {isLoading ? (
+              <FormButton disabled={isPending}>
+                {isPending ? (
                   <CircularProgress size={25} color="primary" />
                 ) : (
                   "Reset Password"

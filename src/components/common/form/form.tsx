@@ -6,8 +6,7 @@ import {
   Paper,
   Typography,
   TypographyProps,
-} from "@material-ui/core";
-import React from "react";
+} from "@mui/material";
 
 import { useStyles } from "./styles";
 import EnhancedLink from "../Link";
@@ -23,7 +22,7 @@ export const Form: React.FC<FormProps> = ({ style, ...props }) => {
 };
 
 export const FormButton: React.FC<ButtonProps> = (props) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Button
       className={classes.button}
@@ -41,7 +40,7 @@ export const FormButton: React.FC<ButtonProps> = (props) => {
 export const FormLegend: React.FC<TypographyProps<React.ElementType>> = (
   props
 ) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Typography
       className={classes.legend}
@@ -56,7 +55,7 @@ export const FormContainer: React.FC<ContainerProps> = ({
   children,
   ...props
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const isSmallerScreenDown = useScreenSizeDown("xs");
 
   return (
@@ -79,7 +78,7 @@ interface FormLinkProps {
 }
 
 export const FormLink: React.FC<FormLinkProps> = ({ href, linkText, text }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Typography className={classes.linkWrapper}>
       {text}

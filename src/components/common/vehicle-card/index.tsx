@@ -6,9 +6,8 @@ import {
   Divider,
   IconButton,
   Typography,
-} from "@material-ui/core";
-import { Favorite, FavoriteBorder, Star } from "@material-ui/icons";
-import React from "react";
+} from "@mui/material";
+import { Favorite, FavoriteBorder, Star } from "@mui/icons-material";
 
 import {
   FALLBACK_VEHICLE_IMAGE_URL,
@@ -24,7 +23,7 @@ interface Props {
 }
 
 const VehicleCard: React.FC<Props> = ({ vehicle, mediaClassName }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const isTogglingFavourite = false;
   const isFavourite = true;
   return (

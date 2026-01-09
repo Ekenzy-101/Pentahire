@@ -1,28 +1,26 @@
-import React from "react";
-
-import Map from "src/components/common/Map";
+import dynamic from "next/dynamic";
 import {
   SectionContainer,
   SectionHeading,
 } from "src/components/common/section";
 import { useVehicle } from "src/hooks";
-import { LoadMapSuccessOptions } from "src/utils/types";
+
+const Map = dynamic(() => import("src/components/common/Map"), {
+  ssr: false,
+});
 
 const VehicleLocation = () => {
   const { data } = useVehicle();
   const location = data?.vehicle.location!;
 
-  const onLoadSuccess = ({ mapRef }: LoadMapSuccessOptions) => {
-    new google.maps.Map(mapRef.current!, {
-      zoom: 8,
-      center: { lat: location.latitude, lng: location.longitude },
-    });
-  };
-
   return (
     <SectionContainer>
       <SectionHeading>LOCATION</SectionHeading>
-      <Map style={{ minHeight: "350px" }} onLoadSuccess={onLoadSuccess} />
+      <Map
+        center={{ lat: location.latitude, lng: location.longitude }}
+        zoom={8}
+        style={{ minHeight: "350px" }}
+      />
     </SectionContainer>
   );
 };

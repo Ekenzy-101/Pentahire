@@ -1,5 +1,3 @@
-import React from "react";
-
 import NoReviews from "src/components/common/NoReviews";
 import ReviewCard from "src/components/common/review-card";
 import {
@@ -17,7 +15,7 @@ interface Props {
 }
 
 const DriverReviews: React.FC<Props> = ({ reviews, title, firstname }) => {
-  const classes = useReviewsStyles();
+  const { classes } = useReviewsStyles();
 
   return (
     <SectionContainer>

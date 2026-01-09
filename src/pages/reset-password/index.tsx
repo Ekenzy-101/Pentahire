@@ -1,9 +1,8 @@
 import { AxiosError } from "axios";
-import { CircularProgress, Typography } from "@material-ui/core";
-import { Color } from "@material-ui/lab";
-import React, { useState } from "react";
+import { AlertColor, CircularProgress, Typography } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import CustomAlert from "src/components/common/alert";
 import Header from "src/components/common/header";
@@ -30,11 +29,11 @@ import {
 
 const ForgotPasswordPage = () => {
   const [message, setMessage] = useState("");
-  const [severity, setSeverity] = useState<Color>("error");
+  const [severity, setSeverity] = useState<AlertColor>("error");
 
-  const { isLoading, mutateAsync } = useMutation(
-    sendForgotPasswordNotification
-  );
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: sendForgotPasswordNotification,
+  });
   const {
     formState: { errors },
     handleSubmit,
@@ -62,7 +61,7 @@ const ForgotPasswordPage = () => {
       setSeverity("success");
     } catch (err) {
       setSeverity("error");
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       displayErrorMessages({ error, formData, setError, setMessage });
     }
   };
@@ -89,8 +88,8 @@ const ForgotPasswordPage = () => {
                 will email you a link where you can reset your password.
               </Typography>
               <FormTextField register={register} name="email" errors={errors} />
-              <FormButton disabled={isLoading}>
-                {isLoading ? (
+              <FormButton disabled={isPending}>
+                {isPending ? (
                   <CircularProgress size={25} color="primary" />
                 ) : (
                   "Send Reset Link"

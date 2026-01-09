@@ -1,5 +1,4 @@
-import { Avatar, Container, Grid } from "@material-ui/core";
-import React from "react";
+import { Avatar, Container, Grid } from "@mui/material";
 
 import DriverFavourites from "./Favourites";
 import DriverProfileDetails from "./ProfileDetails";
@@ -9,7 +8,7 @@ import { useStyles } from "./styles";
 import { useUser } from "src/hooks";
 
 const DriverBody: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data } = useUser();
   const user = data?.user!;
 
@@ -23,10 +22,10 @@ const DriverBody: React.FC = () => {
       />
       <Container className={classes.container} maxWidth="lg">
         <Grid className={classes.gridContainer} container spacing={2}>
-          <Grid item xs={12} lg={5} className={classes.gridItemOverflow}>
+          <Grid size={{ xs: 12, lg: 5 }} className={classes.gridItemOverflow}>
             <DriverProfileDetails />
           </Grid>
-          <Grid item xs={12} lg={7}>
+          <Grid size={{ xs: 12, lg: 7 }}>
             <DriverFavourites />
             <DriverVehicles />
             <DriverReviews

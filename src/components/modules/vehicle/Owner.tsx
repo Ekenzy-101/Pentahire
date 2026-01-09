@@ -1,5 +1,4 @@
-import React from "react";
-import { Avatar, Typography } from "@material-ui/core";
+import { Avatar, Typography } from "@mui/material";
 
 import {
   SectionAvatarWithBadge,
@@ -12,7 +11,7 @@ import { useOwnerStyles } from "./styles";
 import EnhancedLink from "src/components/common/Link";
 
 const VehicleOwner: React.FC = () => {
-  const classes = useOwnerStyles();
+  const { classes } = useOwnerStyles();
   const { data } = useVehicle();
 
   const user = data?.vehicle.user!;

@@ -1,19 +1,18 @@
-import { Button } from "@material-ui/core";
-import React from "react";
+import { Button } from "@mui/material";
 
 import { TO_LOGIN_PAGE, TO_REGISTER_PAGE } from "src/utils/constants";
 import EnhancedLink from "../Link";
 import { useGuestStyles } from "./styles";
 
 const GuestSection: React.FC = () => {
-  const classes = useGuestStyles();
+  const { classes } = useGuestStyles();
 
   return (
     <>
       <EnhancedLink href={TO_LOGIN_PAGE}>
         <Button
           className={classes.button}
-          color="default"
+          color="inherit"
           variant="text"
           size="large"
           disableElevation

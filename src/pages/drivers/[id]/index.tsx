@@ -1,5 +1,3 @@
-import React from "react";
-
 import Header from "src/components/common/header";
 import LoadingPage from "src/components/common/LoadingPage";
 import NotFoundBody from "src/components/common/NotFound";
@@ -10,7 +8,7 @@ import { useUser } from "src/hooks";
 import { COMPANY_NAME } from "src/utils/constants";
 
 const DriverPage = () => {
-  const { data, isLoading } = useUser();
+  const { data, isPending } = useUser();
   const user = data?.user;
 
   return (
@@ -24,12 +22,12 @@ const DriverPage = () => {
                   ? `Book a Car with ${user.firstname}`
                   : user.firstname
               } - ${COMPANY_NAME}`
-            : isLoading
+            : isPending
             ? `Driver Profile - ${COMPANY_NAME}`
             : `This page doesn't exist - ${COMPANY_NAME}`
         }
       />
-      {user ? <DriverBody /> : isLoading ? <LoadingPage /> : <NotFoundBody />}
+      {user ? <DriverBody /> : isPending ? <LoadingPage /> : <NotFoundBody />}
     </EnhancedPaper>
   );
 };

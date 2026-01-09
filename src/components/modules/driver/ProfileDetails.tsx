@@ -1,6 +1,5 @@
-import React from "react";
-import { Avatar, Typography } from "@material-ui/core";
-import { CheckCircleOutlined } from "@material-ui/icons";
+import { Avatar, Typography } from "@mui/material";
+import { CheckCircleOutlined } from "@mui/icons-material";
 
 import {
   SectionAvatarWithBadge,
@@ -11,7 +10,7 @@ import { useUser } from "src/hooks";
 import { DEFAULT_USER_IMAGE_URL } from "src/utils/constants";
 
 const DriverProfileDetails = () => {
-  const classes = useProfileDetailsStyles();
+  const { classes } = useProfileDetailsStyles();
   const { data } = useUser();
   const user = data?.user!;
 

@@ -1,5 +1,5 @@
 import { addDays } from "date-fns";
-import { Button, Divider, Typography } from "@material-ui/core";
+import { Button, Divider, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -16,7 +16,7 @@ interface Props {
 
 const VehicleBooking: React.FC<Props> = ({ btnIcon, btnText }) => {
   const [refundDate, setRefundDate] = useState(addDays(new Date(), 1));
-  const classes = useBookingStyles();
+  const { classes } = useBookingStyles();
   const {
     handleSubmit,
     control,

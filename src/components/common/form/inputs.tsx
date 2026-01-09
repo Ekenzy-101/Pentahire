@@ -1,7 +1,5 @@
-import React from "react";
-import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import clsx from "clsx";
+import { enUS } from "date-fns/locale";
+
 import {
   TextFieldProps,
   TextField,
@@ -11,16 +9,19 @@ import {
   TextareaAutosize,
   MenuItem,
   capitalize,
-} from "@material-ui/core";
+} from "@mui/material";
 import {
-  KeyboardDatePicker,
-  KeyboardDatePickerProps,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+  DatePicker,
+  DatePickerProps,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import React from "react";
 import { UseFormRegister, DeepMap, FieldError } from "react-hook-form";
 
 import { useStyles } from "./styles";
 import { FormValues } from "src/utils/types";
+
 interface Option {
   value: string;
   label: string;
@@ -28,7 +29,7 @@ interface Option {
 
 interface ExternalFieldProps {
   options?: Option[];
-  errors?: DeepMap<FormValues, FieldError>;
+  errors?: Partial<DeepMap<FormValues, FieldError>>;
   name: keyof Omit<FormValues, "image">;
   register?: UseFormRegister<FormValues>;
 }
@@ -85,7 +86,7 @@ export const FormTextArea: React.FC<FormTextAreaProps> = ({
   name,
   errors,
 }) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const commonProps = {
     ...register?.(name),
@@ -97,10 +98,10 @@ export const FormTextArea: React.FC<FormTextAreaProps> = ({
   const message = errors && errors[name]?.message;
 
   return (
-    <Box marginBottom="1rem">
+    <Box component="div" marginBottom="1rem">
       <TextareaAutosize
         className={
-          message ? clsx(classes.textarea, classes.error) : classes.textarea
+          message ? cx(classes.textarea, classes.error) : classes.textarea
         }
         {...commonProps}
       />
@@ -118,7 +119,7 @@ export const FormTextArea: React.FC<FormTextAreaProps> = ({
 };
 
 interface FormDatePickerProps
-  extends Omit<KeyboardDatePickerProps, "name">,
+  extends Omit<DatePickerProps, "name">,
     Omit<ExternalFieldProps, "register"> {}
 
 export const FormDatePicker: React.FC<FormDatePickerProps> = ({
@@ -137,9 +138,9 @@ export const FormDatePicker: React.FC<FormDatePickerProps> = ({
     variant: "inline" as const,
   };
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker {...commonProps} {...pickerProps} />
-    </MuiPickersUtilsProvider>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enUS}>
+      <DatePicker {...commonProps} {...pickerProps} />
+    </LocalizationProvider>
   );
 };
 
@@ -163,7 +164,7 @@ export const FormFileField: React.FC<FormFileFieldProps> = ({
   onChange,
   ...fileProps
 }) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) {
@@ -177,10 +178,9 @@ export const FormFileField: React.FC<FormFileFieldProps> = ({
   return (
     <>
       <Box
+        component="div"
         className={
-          message
-            ? clsx(classes.fileWrapper, classes.error)
-            : classes.fileWrapper
+          message ? cx(classes.fileWrapper, classes.error) : classes.fileWrapper
         }
       >
         <input

@@ -1,11 +1,10 @@
-import React from "react";
-
 import VehicleCard from "src/components/common/vehicle-card";
 import {
   SectionContainer,
   SectionHeading,
 } from "src/components/common/section";
 import { useUser } from "src/hooks";
+import React from "react";
 
 const DriverVehicles: React.FC = () => {
   const { data } = useUser();

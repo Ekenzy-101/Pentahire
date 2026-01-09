@@ -1,5 +1,3 @@
-import React from "react";
-
 import NoReviews from "src/components/common/NoReviews";
 import ReviewCard from "src/components/common/review-card";
 import {
@@ -12,7 +10,7 @@ import { useVehicle } from "src/hooks";
 import { useReviewsStyles } from "./styles";
 
 const VehicleReviews = () => {
-  const classes = useReviewsStyles();
+  const { classes } = useReviewsStyles();
   const { data } = useVehicle();
   const vehicle = data?.vehicle!;
 

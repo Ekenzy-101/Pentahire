@@ -5,17 +5,17 @@ import { TO_LOGIN_PAGE } from "src/utils/constants";
 import { useAuthUser } from "./useAuthUser";
 
 export function usePrivateRoute() {
-  const { user, isLoading } = useAuthUser();
+  const { user, isPending } = useAuthUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!isPending && !user) {
       router.push({
         pathname: TO_LOGIN_PAGE,
         query: { next: router.pathname },
       });
     }
-  }, [isLoading, user]);
+  }, [isPending, user]);
 
-  return { loading: isLoading || !user };
+  return { loading: isPending || !user };
 }

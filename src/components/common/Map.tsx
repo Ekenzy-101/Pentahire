@@ -1,43 +1,43 @@
-import { Loader } from "@googlemaps/js-api-loader";
-import React, { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+"use client";
+import { LatLngExpression } from "leaflet";
+import React, { useEffect, useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 import LoadingPage from "./LoadingPage";
-
-const loader = new Loader({
-  apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!,
-  version: "weekly",
-  libraries: ["places"],
-  region: "NG",
-});
+import { MAP_API_KEY } from "src/utils/constants";
 
 interface Props {
   height?: number | string;
   width?: number | string;
   style?: React.CSSProperties;
-  onLoadSuccess?: (params: {
-    mapRef: React.MutableRefObject<HTMLDivElement | null>;
-  }) => void;
+  center?: LatLngExpression;
+  zoom?: number;
 }
 
-const Map: React.FC<Props> = ({ onLoadSuccess, style }) => {
-  const [loaded, setLoaded] = useState(false);
-  const mapRef = useRef<HTMLDivElement | null>(null);
+const Map: React.FC<Props> = ({ center, zoom, style }) => {
+  const [loaded, _] = useState(false);
 
-  useEffect(() => {
-    loader
-      .load()
-      .then(() => {
-        setLoaded(true);
-        onLoadSuccess?.({ mapRef });
-      })
-      .catch(() => {
-        toast.error("Map failed to load. Please try again later");
-      });
-  }, []);
+  console.log(MAP_API_KEY);
+
+  useEffect(() => {}, []);
 
   return loaded ? (
-    <div id="map" ref={mapRef} style={style} />
+    <MapContainer
+      style={style}
+      center={center}
+      zoom={zoom}
+      scrollWheelZoom={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={center!}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+    </MapContainer>
   ) : (
     <LoadingPage rootProps={{ style }} />
   );

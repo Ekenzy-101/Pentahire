@@ -3,8 +3,13 @@
     /* BASIC OPTIONS */
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ES2017", "ES2018", "DOM", "ESNext.AsyncIterable"],
-    "jsx": "preserve",
+    "lib": [
+      "ES2017",
+      "ES2018",
+      "DOM",
+      "ESNext.AsyncIterable"
+    ],
+    "jsx": "react-jsx",
     "removeComments": true,
     "preserveConstEnums": true,
     /* STRICT TYPE-CHECKING OPTIONS */
@@ -20,7 +25,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     /* MODULE RESOLUTION OPTIONS */
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "baseUrl": "./",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -32,11 +37,21 @@
     "resolveJsonModule": true,
     /* ADVANCED OPTIONS */
     "skipLibCheck": true,
-    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "allowJs": true,
+    "incremental": true
   },
-  "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

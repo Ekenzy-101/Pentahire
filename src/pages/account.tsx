@@ -1,5 +1,3 @@
-import React from "react";
-
 import Header from "src/components/common/header";
 import LoadingPage from "src/components/common/LoadingPage";
 import EnhancedPaper from "src/components/common/Paper";

@@ -1,5 +1,3 @@
-import React from "react";
-
 import BrowseCarSlider from "../sliders/BrowseCar";
 import BrowseLocationSlider from "../sliders/BrowseLocation";
 import BrowseMakeSlider from "../sliders/BrowseMake";

@@ -6,15 +6,15 @@ import {
   DialogContent,
   TextField,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { useState } from "react";
-import { useMutation, useQuery } from "react-query";
-import QRCode from "qrcode.react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { QRCodeSVG } from "qrcode.react";
 
 import CustomAlert from "src/components/common/alert";
 import LoadingPage from "src/components/common/LoadingPage";
 import { confirmOTPKey, deleteOTPKey, getOTPKey } from "src/services/api";
-import { logger } from "src/services/logger";
+import { useLogger } from "src/hooks/useLogger";
 import { isObject } from "src/utils/helpers";
 import { useAuthUser } from "src/hooks";
 import { User } from "src/utils/types";
@@ -24,7 +24,7 @@ import { useDialogStyles, useSectionStyles } from "./styles";
 
 const TwoFactorAuthSection: React.FC = () => {
   const [modal, setModal] = useState<"enable" | "disable" | "none">("none");
-  const classes = useSectionStyles();
+  const { classes } = useSectionStyles();
 
   const { user } = useAuthUser() as { user: User };
   return (
@@ -90,13 +90,15 @@ const Enable2FADialog: React.FC<DialogProps> = ({ open, onClose }) => {
   const [finalStep, setFinalStep] = useState(false);
   const [message, setMessage] = useState("");
 
-  const { data, isLoading: isFetchingOTPKey } = useQuery("otp-key", getOTPKey, {
+  const { data, isPending: isFetchingOTPKey } = useQuery({
+    queryKey: ["otp-key"],
+    queryFn: getOTPKey,
     refetchOnMount: true,
     staleTime: 0,
   });
-  const { mutateAsync, isLoading } = useMutation(confirmOTPKey);
-  const classes = useDialogStyles();
-  const log = logger(Enable2FADialog.name);
+  const { mutateAsync, isPending } = useMutation({ mutationFn: confirmOTPKey });
+  const { classes } = useDialogStyles();
+  const log = useLogger(Enable2FADialog.name);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newCode = event.target.value;
@@ -119,7 +121,7 @@ const Enable2FADialog: React.FC<DialogProps> = ({ open, onClose }) => {
       await mutateAsync({ code });
       handleClose();
     } catch (ex) {
-      const error = ex as AxiosError;
+      const error = ex as AxiosError<any>;
       const errors = error.response?.data;
       if (isObject(errors)) {
         setMessage(errors.message);
@@ -183,7 +185,7 @@ const Enable2FADialog: React.FC<DialogProps> = ({ open, onClose }) => {
               />
             ) : displayType === "qrcode" ? (
               <>
-                <QRCode
+                <QRCodeSVG
                   className={classes.center}
                   value={data?.url!}
                   size={164}
@@ -230,7 +232,7 @@ const Enable2FADialog: React.FC<DialogProps> = ({ open, onClose }) => {
         </Button>
         <Button
           variant="contained"
-          disabled={(finalStep && code.length < 6) || isLoading}
+          disabled={(finalStep && code.length < 6) || isPending}
           disableElevation
           color="primary"
           onClick={finalStep ? handleEnable2FA : handleNext}
@@ -243,9 +245,9 @@ const Enable2FADialog: React.FC<DialogProps> = ({ open, onClose }) => {
 };
 
 const Disable2FADialog: React.FC<DialogProps> = ({ open, onClose }) => {
-  const classes = useDialogStyles();
-  const { mutateAsync, isLoading } = useMutation(deleteOTPKey);
-  const log = logger(Disable2FADialog.name);
+  const { classes } = useDialogStyles();
+  const { mutateAsync, isPending } = useMutation({ mutationFn: deleteOTPKey });
+  const log = useLogger(Disable2FADialog.name);
 
   const handleDisable2FA = async () => {
     try {
@@ -274,7 +276,7 @@ const Disable2FADialog: React.FC<DialogProps> = ({ open, onClose }) => {
         </Button>
         <Button
           variant="contained"
-          disabled={isLoading}
+          disabled={isPending}
           disableElevation
           color="primary"
           onClick={handleDisable2FA}

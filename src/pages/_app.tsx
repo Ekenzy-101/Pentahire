@@ -1,32 +1,24 @@
-import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import { AppCacheProvider } from "@mui/material-nextjs/v16-pagesRouter";
+import { ThemeProvider } from "@mui/material/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { useEffect, useRef } from "react";
+import React from "react";
 import { Toaster } from "react-hot-toast";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { Hydrate } from "react-query/hydration";
+import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { theme } from "src/components/foundation";
 import "../styles/global.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { getNewQueryClient } from "../utils/helpers";
+import { getNewQueryClient } from "src/utils/helpers";
 
-const App = ({ Component, pageProps }: AppProps) => {
-  const queryClientRef = useRef<QueryClient>();
-  if (!queryClientRef.current) {
-    queryClientRef.current = getNewQueryClient();
-  }
-
-  useEffect(() => {
-    const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles) {
-      jssStyles.parentElement!.removeChild(jssStyles);
-    }
-  }, []);
+const App: React.FC<AppProps> = (props) => {
+  const [queryClient] = React.useState(() => getNewQueryClient());
+  const { Component, pageProps } = props;
 
   return (
-    <>
+    <AppCacheProvider {...props}>
       <Head>
         <meta
           name="viewport"
@@ -51,15 +43,15 @@ const App = ({ Component, pageProps }: AppProps) => {
           },
         }}
       />
-      <QueryClientProvider client={queryClientRef.current}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <HydrationBoundary state={pageProps.dehydratedState}>
             <Component {...pageProps} />
-          </ThemeProvider>
-        </Hydrate>
-      </QueryClientProvider>
-    </>
+          </HydrationBoundary>
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </AppCacheProvider>
   );
 };
 

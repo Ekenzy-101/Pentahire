@@ -5,14 +5,14 @@ import { TO_HOME_PAGE } from "src/utils/constants";
 import { useAuthUser } from "./useAuthUser";
 
 export function useRedirectedRoute(path?: string) {
-  const { user, isLoading } = useAuthUser();
+  const { user, isPending } = useAuthUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && user && path != router.pathname) {
+    if (!isPending && user && path != router.pathname) {
       router.push(path || TO_HOME_PAGE);
     }
-  }, [isLoading, user]);
+  }, [isPending, user]);
 
-  return { loading: isLoading || user };
+  return { loading: isPending || user };
 }

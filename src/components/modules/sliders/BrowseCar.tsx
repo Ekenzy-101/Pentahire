@@ -1,6 +1,5 @@
 import { Settings } from "@ant-design/react-slick";
-import { Avatar, Button, Grid, Typography } from "@material-ui/core";
-import React from "react";
+import { Avatar, Button, Grid, Typography } from "@mui/material";
 
 import EnhancedLink from "src/components/common/Link";
 import EnhancedSlider from "src/components/common/slider";
@@ -42,7 +41,7 @@ const settings: Settings = {
 };
 
 const BrowseCarSlider: React.FC = () => {
-  const classes = useCarStyles();
+  const { classes } = useCarStyles();
   return (
     <EnhancedSlider rootProps={{ maxWidth: "lg" }} settings={settings}>
       {data.map(({ body, primaryTitle }, index) => (
@@ -53,7 +52,7 @@ const BrowseCarSlider: React.FC = () => {
           key={index}
           spacing={2}
         >
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Avatar
               className={classes.image}
               src={`/images/car/${index}.jpg`}
@@ -61,7 +60,7 @@ const BrowseCarSlider: React.FC = () => {
               variant="square"
             />
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <Typography component="h2">
               <Typography component="span" className={classes.title}>
                 Find the perfect car{" "}

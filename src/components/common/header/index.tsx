@@ -1,5 +1,4 @@
-import { AppBar, Toolbar, Avatar, Box } from "@material-ui/core";
-import React from "react";
+import { AppBar, Toolbar, Avatar, Box } from "@mui/material";
 
 import {
   COMPANY_LOGO_URL,
@@ -13,7 +12,7 @@ import AuthSection from "./auth";
 import EnhancedLink from "../Link";
 
 const Header: React.FC = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { user } = useAuthUser();
 
   return (
@@ -27,7 +26,12 @@ const Header: React.FC = () => {
             variant="rounded"
           />
         </EnhancedLink>
-        <Box marginLeft="auto" display="flex" alignItems="center">
+        <Box
+          component="div"
+          marginLeft="auto"
+          display="flex"
+          alignItems="center"
+        >
           {!user ? <GuestSection /> : <AuthSection />}
         </Box>
       </Toolbar>

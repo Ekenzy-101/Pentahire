@@ -1,4 +1,6 @@
-import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+"use client";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { Roboto } from "next/font/google";
 
 export const BREAKPOINTS = {
   xs: 0,
@@ -8,8 +10,15 @@ export const BREAKPOINTS = {
   xl: 1300,
 };
 
+export const roboto = Roboto({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const theme = responsiveFontSizes(
-  createMuiTheme({
+  createTheme({
+    cssVariables: true,
     palette: {
       secondary: {
         main: "#4285F4", // Blue
@@ -19,9 +28,16 @@ export const theme = responsiveFontSizes(
         main: "#593CFB", // Purple
         light: "#F2E9FF",
       },
+      background: {
+        default: "#FAFAFA",
+        paper: "#FFFFFF",
+      },
     },
     breakpoints: {
       values: BREAKPOINTS,
+    },
+    typography: {
+      fontFamily: roboto.style.fontFamily,
     },
   })
 );

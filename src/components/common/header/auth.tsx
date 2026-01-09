@@ -1,6 +1,6 @@
-import { Avatar, Menu, MenuItem, Typography } from "@material-ui/core";
+import { Avatar, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import {
   TO_ACCOUNT_PAGE,
@@ -41,7 +41,7 @@ const transformOrigin = {
 };
 
 const AuthSection: React.FC = () => {
-  const classes = useAuthStyles();
+  const { classes } = useAuthStyles();
 
   return (
     <>
@@ -60,8 +60,8 @@ const AccountSection: React.FC = () => {
   const { user } = useAuthUser() as { user: User };
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const classes = useAuthStyles();
-  const { mutateAsync, isLoading } = useMutation(logoutUser);
+  const { classes } = useAuthStyles();
+  const { mutateAsync, isPending } = useMutation({ mutationFn: logoutUser });
 
   const handleLogout = useCallback(async () => {
     await mutateAsync();
@@ -126,7 +126,11 @@ const AccountSection: React.FC = () => {
             </EnhancedLink>
           </MenuItem>
         ))}
-        <MenuItem disabled={isLoading} onClick={handleLogout} button>
+        <MenuItem
+          component="button"
+          disabled={isPending}
+          onClick={handleLogout}
+        >
           Logout
         </MenuItem>
       </Menu>
@@ -137,7 +141,7 @@ const AccountSection: React.FC = () => {
 const TripSection: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const classes = useAuthStyles();
+  const { classes } = useAuthStyles();
 
   return (
     <>

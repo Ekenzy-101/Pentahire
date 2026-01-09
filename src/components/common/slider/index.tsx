@@ -1,12 +1,11 @@
 import Slider, { Settings } from "@ant-design/react-slick";
-import clsx from "clsx";
-import { Container, ContainerProps, IconButton } from "@material-ui/core";
-import { ArrowBack, ArrowForward } from "@material-ui/icons";
-import React, { useRef } from "react";
+import { Container, ContainerProps, IconButton } from "@mui/material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import React, { PropsWithChildren, useRef } from "react";
 
 import { useStyles } from "./styles";
 
-interface Props {
+interface Props extends PropsWithChildren {
   removeArrowsOnMobile?: boolean;
   rootProps?: Omit<ContainerProps, "children">;
   rootChildren?: React.ReactNode;
@@ -21,7 +20,7 @@ const EnhancedSlider: React.FC<Props> = ({
   settings,
 }) => {
   const sliderRef = useRef<Slider | null>(null);
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const handleSlickNext = () => {
     sliderRef.current?.slickNext();
@@ -38,18 +37,18 @@ const EnhancedSlider: React.FC<Props> = ({
   return (
     <Container
       {...rootProps}
-      className={clsx(classes.root, rootProps?.className)}
+      className={cx(classes.root, rootProps?.className)}
     >
       {rootChildren}
       <IconButton
         onClick={handleSlickPrev}
-        className={clsx(...btnClassNames, classes.prevBtn)}
+        className={cx(...btnClassNames, classes.prevBtn)}
       >
         <ArrowBack />
       </IconButton>
       <IconButton
         onClick={handleSlickNext}
-        className={clsx(...btnClassNames, classes.nextBtn)}
+        className={cx(...btnClassNames, classes.nextBtn)}
       >
         <ArrowForward />
       </IconButton>

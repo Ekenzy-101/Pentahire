@@ -1,4 +1,4 @@
-import { QueryClient } from "react-query";
+import { QueryClient } from "@tanstack/react-query";
 
 export function getNewQueryClient() {
   return new QueryClient({
@@ -6,7 +6,7 @@ export function getNewQueryClient() {
       queries: {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
-        cacheTime: Infinity,
+        gcTime: Infinity,
         staleTime: Infinity,
       },
     },

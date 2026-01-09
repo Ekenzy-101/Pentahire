@@ -1,5 +1,3 @@
-import React from "react";
-
 import VehicleCard from "src/components/common/vehicle-card";
 import {
   SectionButton,
@@ -7,22 +5,32 @@ import {
   SectionHeading,
 } from "src/components/common/section";
 import { useReviewsStyles } from "./styles";
+import React from "react";
+import { Vehicle } from "src/utils/types";
 
-const vehicle = {
+const vehicle: Vehicle = {
   id: "60c232cec04ea165125ff654",
   created_at: "2021-06-18T07:12:33.024Z",
   image: "https://pentahire.s3.amazonaws.com/vehicles/60c232cec04ea165125ff654",
   reviews_count: 3,
   make: "bmw",
   name: "BMZ 7 Series 2016",
-  rentalFee: 190,
+  rental_fee: 190,
   average_rating: 4.8,
   user_id: "60b88c2042d499ba9b65958f",
+  address: "",
+  endDate: "",
+  location: {
+    latitude: 51.505,
+    longitude: -0.09,
+  },
+  startDate: "",
+  trips_count: 2,
 };
 
 const DriverFavourites: React.FC = () => {
   const vehicles = [0, 1, 2];
-  const classes = useReviewsStyles();
+  const { classes } = useReviewsStyles();
   return (
     <SectionContainer>
       <SectionHeading>ONYEKABA'S FAVOURITES</SectionHeading>

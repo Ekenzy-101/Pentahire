@@ -1,11 +1,10 @@
-import { Button, Typography } from "@material-ui/core";
-import React from "react";
+import { Button, Typography } from "@mui/material";
 
 import AccountSection from "./AccountSection";
 import { useSectionStyles } from "./styles";
 
 const AccountCloseSection = () => {
-  const classes = useSectionStyles();
+  const { classes } = useSectionStyles();
   return (
     <AccountSection
       description={

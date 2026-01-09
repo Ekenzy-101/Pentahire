@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
-import { CircularProgress, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import { CircularProgress, Typography } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import CustomAlert from "src/components/common/alert";
 import { Form, FormButton, FormTextField } from "src/components/common/form";
@@ -17,7 +17,7 @@ import PasswordInfo from "../../common/PasswordInfo";
 
 const AccountPasswordSection = () => {
   const [message, setMessage] = useState("");
-  const classes = useSectionStyles();
+  const { classes } = useSectionStyles();
   const {
     register,
     formState: { errors },
@@ -29,14 +29,16 @@ const AccountPasswordSection = () => {
     defaultValues: { oldPassword: "", password: "", confirmPassword: "" },
     resolver: userResolver,
   });
-  const { mutateAsync, isLoading } = useMutation(updatePassword);
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: updatePassword,
+  });
 
   const onUpdatePassword = async ({ oldPassword, password }: FormValues) => {
     try {
       await mutateAsync({ old_password: oldPassword, new_password: password });
       toast.success("Password updated successfully");
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       const errors = error.response?.data;
       if (isObject(errors)) {
         setError("password", { message: errors.new_password });
@@ -88,8 +90,8 @@ const AccountPasswordSection = () => {
             label="Confirm New Password"
             {...commonProps}
           />
-          <FormButton disabled={isLoading}>
-            {isLoading ? (
+          <FormButton disabled={isPending}>
+            {isPending ? (
               <CircularProgress size={25} color="primary" />
             ) : (
               "Update Password"

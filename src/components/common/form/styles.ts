@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "tss-react/mui";
 
-export const useStyles = makeStyles(({ palette }) => ({
+export const useStyles = makeStyles()(({ palette }) => ({
   button: {
     color: palette.common.white,
     marginBottom: "1rem",

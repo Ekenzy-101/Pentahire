@@ -1,13 +1,11 @@
-import { Collapse, IconButton } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
-import { Alert, Color } from "@material-ui/lab";
-import React from "react";
+import { Alert, AlertColor, Collapse, IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 interface Props {
   message: string;
   open: boolean;
   onClose: () => void;
-  severity: Color;
+  severity: AlertColor;
 }
 
 const CustomAlert: React.FC<Props> = ({ message, open, onClose, severity }) => {

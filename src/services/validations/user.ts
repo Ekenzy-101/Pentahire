@@ -1,4 +1,4 @@
-import { FieldError, Resolver } from "react-hook-form";
+import { FieldErrors, Resolver } from "react-hook-form";
 import validator from "validator";
 
 import { FormValues, UserFormValues } from "src/utils/types";
@@ -16,7 +16,7 @@ const validate: Record<string, (value: any) => string | undefined> = {
 export const userResolver: Resolver<FormValues> = async (
   values: FormValues
 ) => {
-  const errors: Record<string, FieldError> = {};
+  const errors: FieldErrors<FormValues> = {};
   const { confirmPassword, password } = values;
   Object.keys(values).forEach((field) => {
     const key = field as keyof UserFormValues;
@@ -34,9 +34,9 @@ export const userResolver: Resolver<FormValues> = async (
 
   return {
     errors,
-    values: values.email
+    values: (values.email
       ? { ...values, email: values.email.toLowerCase() }
-      : values,
+      : values) as any,
   };
 };
 

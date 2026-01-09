@@ -1,9 +1,8 @@
 import { AxiosError } from "axios";
-import { CircularProgress, Typography } from "@material-ui/core";
+import { CircularProgress, Typography } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import CustomAlert from "src/components/common/alert";
 import Header from "src/components/common/header";
@@ -23,21 +22,25 @@ import { useRedirectedRoute } from "src/hooks";
 import { registerUser, sendVerifyEmailNotification } from "src/services/api";
 import { displayErrorMessages, userResolver } from "src/services/validations";
 import {
+  CAPTCHA_SITE_KEY,
   COMPANY_NAME,
   TO_LOGIN_PAGE,
   TO_REGISTER_PAGE,
 } from "src/utils/constants";
 import { FormValues } from "src/utils/types";
 import { isObject } from "src/utils/helpers";
+import Captcha from "src/components/common/Captcha";
 
 const RegisterPage = () => {
   const [finalStep, setFinalStep] = useState(false);
   const [message, setMessage] = useState("");
-  const recaptchaRef = useRef<HCaptcha>(null);
+  const captchaRef = useRef<any>(null);
 
-  const { mutateAsync, isLoading } = useMutation(sendVerifyEmailNotification);
-  const { mutateAsync: mutateRegisterAsync, isLoading: isRegisteringUser } =
-    useMutation(registerUser);
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: sendVerifyEmailNotification,
+  });
+  const { mutateAsync: mutateRegisterAsync, isPending: isRegisteringUser } =
+    useMutation({ mutationFn: registerUser });
   const client = useQueryClient();
   const { loading } = useRedirectedRoute(
     finalStep ? TO_REGISTER_PAGE : undefined
@@ -67,7 +70,7 @@ const RegisterPage = () => {
       event.preventDefault();
       await mutateAsync({ email: getValues("email") });
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       const errors = error.response?.data;
       if (errors && isObject(errors)) {
         if (errors.message) {
@@ -92,17 +95,17 @@ const RegisterPage = () => {
         token,
       });
       setFinalStep(true);
-      client.setQueryData("authUser", { user });
+      client.setQueryData(["authUser"], { user });
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       displayErrorMessages({ error, formData, setError, setMessage });
     } finally {
-      recaptchaRef.current?.resetCaptcha();
+      captchaRef.current?.resetCaptcha();
     }
   };
 
   const onSubmit = () => {
-    recaptchaRef.current?.execute();
+    captchaRef.current?.execute();
   };
 
   return (
@@ -129,8 +132,8 @@ const RegisterPage = () => {
                   mail check your spam settings or check the spelling of your
                   email address.
                 </Typography>
-                <FormButton disabled={isLoading}>
-                  {isLoading ? (
+                <FormButton disabled={isPending}>
+                  {isPending ? (
                     <CircularProgress size={25} color="primary" />
                   ) : (
                     "Resend Email"
@@ -176,10 +179,9 @@ const RegisterPage = () => {
                   type="password"
                   style={{ marginTop: 0 }}
                 />
-                <HCaptcha
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY!}
-                  size="invisible"
+                <Captcha
+                  ref={captchaRef}
+                  sitekey={CAPTCHA_SITE_KEY}
                   onError={setMessage}
                   onExpire={() =>
                     setMessage("Token has expired. Please try again")

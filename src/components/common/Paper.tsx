@@ -1,5 +1,4 @@
-import { Paper, PaperProps } from "@material-ui/core";
-import React from "react";
+import { Paper, PaperProps } from "@mui/material";
 
 const EnhancedPaper: React.FC<PaperProps> = (props) => {
   return (

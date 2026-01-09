@@ -1,6 +1,5 @@
 import { Settings } from "@ant-design/react-slick";
-import { Card, CardActions, CardMedia, Typography } from "@material-ui/core";
-import React from "react";
+import { Card, CardActions, CardMedia, Typography } from "@mui/material";
 
 import EnhancedSlider from "src/components/common/slider";
 import EnhancedLink from "src/components/common/Link";
@@ -8,6 +7,7 @@ import { useMakeOrLocationStyles } from "./styles";
 import { TO_VEHICLES_PAGE } from "src/utils/constants";
 import { vehicleMakes } from "src/utils/data";
 import { BREAKPOINTS } from "src/components/foundation";
+import React from "react";
 
 const settings: Settings = {
   dots: false,
@@ -41,7 +41,7 @@ const settings: Settings = {
 };
 
 const BrowseMakeSlider: React.FC = () => {
-  const classes = useMakeOrLocationStyles({ variant: "make" });
+  const { classes } = useMakeOrLocationStyles({ variant: "make" });
   return (
     <EnhancedSlider
       removeArrowsOnMobile

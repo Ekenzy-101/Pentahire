@@ -1,9 +1,9 @@
-import { Avatar, Box, CircularProgress, Typography } from "@material-ui/core";
+import { Avatar, Box, CircularProgress, Typography } from "@mui/material";
 import { AxiosError } from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import CustomAlert from "src/components/common/alert";
 import { Form, FormButton, FormTextField } from "src/components/common/form";
@@ -19,9 +19,9 @@ const AccountProfileSection = () => {
   const [message, setMessage] = useState("");
 
   const { user } = useAuthUser() as { user: User };
-  const { isLoading, mutateAsync } = useMutation(updateProfile);
+  const { isPending, mutateAsync } = useMutation({ mutationFn: updateProfile });
   const client = useQueryClient();
-  const classes = useSectionStyles();
+  const { classes } = useSectionStyles();
   const {
     register,
     formState: { errors },
@@ -44,14 +44,19 @@ const AccountProfileSection = () => {
       const { email, firstname, lastname } = formData;
       await mutateAsync({ email, firstname, lastname });
 
-      client.setQueryData<{ user: User | null }>("authUser", (previousData) => {
-        if (!previousData) return { user: null };
+      client.setQueryData<{ user: User | null }>(
+        ["authUser"],
+        (previousData) => {
+          if (!previousData) return { user: null };
 
-        return { user: { ...previousData.user!, email, firstname, lastname } };
-      });
+          return {
+            user: { ...previousData.user!, email, firstname, lastname },
+          };
+        }
+      );
       toast.success("Profile updated successfully");
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
       displayErrorMessages({ error, formData, setError, setMessage });
     }
   };
@@ -70,9 +75,10 @@ const AccountProfileSection = () => {
       content={
         <>
           <Box
+            component="div"
             alignItems="center"
             display="flex"
-            gridGap="1rem"
+            gap="1rem"
             marginBottom="1rem"
           >
             <Avatar
@@ -117,8 +123,8 @@ const AccountProfileSection = () => {
               errors={errors}
               register={register}
             />
-            <FormButton disabled={disabled || isLoading}>
-              {isLoading ? (
+            <FormButton disabled={disabled || isPending}>
+              {isPending ? (
                 <CircularProgress size={25} color="primary" />
               ) : (
                 "Update Profile"

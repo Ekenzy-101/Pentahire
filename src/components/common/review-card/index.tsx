@@ -1,17 +1,14 @@
-import clsx from "clsx";
-import { Avatar, Box, Divider, Typography } from "@material-ui/core";
-import { Rating } from "@material-ui/lab";
-import React from "react";
+import { Avatar, Box, Divider, Rating, Typography } from "@mui/material";
 
 import { useStyles } from "./styles";
 import EnhancedLink from "../Link";
 import { TO_DRIVERS_PAGE } from "../../../utils/constants";
 
 const ReviewCard: React.FC = () => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
     <>
-      <Box display="flex" padding="24px 16px 24px 0">
+      <Box component="div" display="flex" padding="24px 16px 24px 0">
         <EnhancedLink href={`${TO_DRIVERS_PAGE}/25252`}>
           <Avatar
             src="/images/user.jpg"
@@ -19,12 +16,12 @@ const ReviewCard: React.FC = () => {
             className={classes.avatar}
           />
         </EnhancedLink>
-        <Box paddingLeft="16px">
+        <Box component="div" paddingLeft="16px">
           <Rating
             readOnly
             value={5}
             color="primary"
-            className={clsx(classes.textSpacing, classes.rating)}
+            className={cx(classes.textSpacing, classes.rating)}
           />
           <Typography
             className={classes.textSpacing}

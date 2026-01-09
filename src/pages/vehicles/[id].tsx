@@ -1,5 +1,3 @@
-import React from "react";
-
 import Header from "src/components/common/header";
 import LoadingPage from "src/components/common/LoadingPage";
 import EnhancedPaper from "src/components/common/Paper";
@@ -10,7 +8,7 @@ import { useVehicle } from "src/hooks";
 import { COMPANY_NAME } from "src/utils/constants";
 
 const VehiclePage = () => {
-  const { data, isLoading } = useVehicle();
+  const { data, isPending } = useVehicle();
   const vehicle = data?.vehicle;
 
   return (
@@ -19,7 +17,7 @@ const VehiclePage = () => {
         title={
           vehicle
             ? `${vehicle.name} rental in ${vehicle.address} by ${vehicle.user?.firstname} - ${COMPANY_NAME}`
-            : isLoading
+            : isPending
             ? `Vehicle Profile - ${COMPANY_NAME}`
             : `This page doesn't exist - ${COMPANY_NAME}`
         }
@@ -27,7 +25,7 @@ const VehiclePage = () => {
       <Header />
       {vehicle ? (
         <VehicleBody />
-      ) : isLoading ? (
+      ) : isPending ? (
         <LoadingPage />
       ) : (
         <NotFoundBody />
