@@ -5,9 +5,19 @@ import EnhancedSlider from "src/components/common/slider";
 import EnhancedLink from "src/components/common/Link";
 import { useMakeOrLocationStyles } from "./styles";
 import { TO_VEHICLES_PAGE } from "src/utils/constants";
-import { vehicleMakes } from "src/utils/data";
 import { BREAKPOINTS } from "src/components/foundation";
 import React from "react";
+
+const data = [
+  { label: "BMW", value: "bmw" },
+  { label: "Lamborghini", value: "lamborghini" },
+  { label: "Mercendes Benz", value: "mb" },
+  { label: "Nissan", value: "nissan" },
+  { label: "Porsche", value: "porsche" },
+  { label: "Subaru", value: "subaru" },
+  { label: "Tesla", value: "tesla" },
+  { label: "Toyota", value: "toyota" },
+];
 
 const settings: Settings = {
   dots: false,
@@ -54,7 +64,7 @@ const BrowseMakeSlider: React.FC = () => {
       settings={settings}
     >
       {React.Children.toArray(
-        vehicleMakes.map(({ label, value }) => (
+        data.map(({ label, value }) => (
           <EnhancedLink
             className={classes.link}
             href={`${TO_VEHICLES_PAGE}?make=${value}`}

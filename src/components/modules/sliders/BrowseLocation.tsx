@@ -3,10 +3,18 @@ import { Card, CardMedia, CardActions, Typography } from "@mui/material";
 
 import EnhancedLink from "src/components/common/Link";
 import EnhancedSlider from "src/components/common/slider";
-import { vehicleLocations } from "src/utils/data";
 import { BREAKPOINTS } from "src/components/foundation";
 import { useMakeOrLocationStyles } from "./styles";
 import React from "react";
+
+const data = [
+  { label: "Abuja", value: "abuja" },
+  { label: "Anambra", value: "anambra" },
+  { label: "Enugu", value: "enugu" },
+  { label: "Lagos", value: "lagos" },
+  { label: "Ogun", value: "ogun" },
+  { label: "Port Harcourt", value: "port-harcourt" },
+];
 
 const settings: Settings = {
   dots: false,
@@ -61,7 +69,7 @@ const BrowseLocationSlider: React.FC = () => {
       settings={settings}
     >
       {React.Children.toArray(
-        vehicleLocations.map(({ label, value }, index) => (
+        data.map(({ label, value }, index) => (
           <EnhancedLink className={classes.link} href="/" key={index}>
             <Card className={classes.root}>
               <CardMedia

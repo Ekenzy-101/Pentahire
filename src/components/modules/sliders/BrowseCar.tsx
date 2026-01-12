@@ -1,5 +1,5 @@
 import { Settings } from "@ant-design/react-slick";
-import { Avatar, Button, Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
 import EnhancedLink from "src/components/common/Link";
 import EnhancedSlider from "src/components/common/slider";
@@ -53,11 +53,10 @@ const BrowseCarSlider: React.FC = () => {
           spacing={2}
         >
           <Grid size={{ xs: 12, md: 6 }}>
-            <Avatar
+            <img
               className={classes.image}
               src={`/images/car/${index}.jpg`}
               alt="Car rental Image"
-              variant="square"
             />
           </Grid>
           <Grid size={{ xs: 12, md: 5 }}>
